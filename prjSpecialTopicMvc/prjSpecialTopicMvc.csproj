@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\UsedBook\" />
     <Folder Include="_tmp\" />
   </ItemGroup>
 

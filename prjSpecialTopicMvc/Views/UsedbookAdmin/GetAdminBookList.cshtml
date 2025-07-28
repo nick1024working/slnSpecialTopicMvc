@@ -1,0 +1,136 @@
+﻿@using prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Responses
+@model IEnumerable<AdminBookListItemDto>
+
+@{
+	ViewData["Title"] = "GetUserBookList";
+}
+
+@section Styles {
+	<!-- Lightbox CSS -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet" />
+
+	<style>
+		.table td,
+		.table th {
+			padding: 0.75rem 1.25rem;
+		}
+	</style>
+}
+
+<div class="row my-4 px-3 align-items-end">
+	<div class="col-10">
+		<h2>管理員書本列表</h2>
+	</div>
+</div>
+
+<div class="bg-white border-light">
+	<div class="p-3 mb-0 border-bottom d-flex gap-2">
+		<h4 class="me-auto">管理員書本列表</h4>
+		<button asp-controller="UsedBook" asp-action="CreateBook" class="btn btn-sm btn-light border-secondary d-flex align-items-center">大量匯入</button>
+		<a asp-controller="UsedBook" asp-action="CreateBook" class="btn btn-sm btn-light border-secondary d-flex align-items-center">新增書本</a>
+	</div>
+	<div class="p-3 mb-0 border-bottom d-flex gap-2">
+		<div class="btn-group">
+			<button class="btn btn-sm btn-light border-secondary dropdown-toggle text-nowrap" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+				顯示：所有書本
+			</button>
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item" href="#">所有書本</a></li>
+				<li><a class="dropdown-item" href="#">上架中書本</a></li>
+				<li><a class="dropdown-item" href="#">已售出書本</a></li>
+				<li><hr class="dropdown-divider"></li>
+				<li><a class="dropdown-item" href="#">Separated link</a></li>
+			</ul>
+		</div>
+		<form class="d-flex btn-group">
+			<input class="form-control me-" type="search" placeholder="Search" aria-label="Search">
+			<button type="submit" class="btn btn-light border-secondary text-nowrap">搜尋</button>
+		</form>
+	</div>
+</div>
+
+<table class="table table-hover">
+	<thead>
+		<tr class="text-start align-middle">
+			<th>
+				圖片
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Title)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.SalePrice)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.IsOnShelf)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.IsActive)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.IsSold)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.UpdatedAt)
+			</th>
+			<th>
+				修改
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr class="text-start align-middle">
+				<td>
+					<a href="@item.CoverImageUrl" data-lightbox="book-image-@item.Id" data-title="@item.Title">
+						<img src="@item.CoverImageUrl" alt="book-cover" style="max-height: 120px" class="img-thumbnail" />
+					</a>
+				</td>
+				<td class="text-start text-wrap text-break">
+					<a href="/usedbooks/@item.Slug">@item.Title</a>
+				</td>
+				<td class="text-start" style="min-width: 100px;">
+					@($"NT${item.SalePrice:N0}")
+				</td>
+				<td class="text-center" style="min-width: 75px;">
+					<input type="checkbox"
+						   class="form-check-input toggle-checkbox"
+						   data-id="@item.Id"
+						   data-field="IsOnShelf"
+					@(item.IsOnShelf ? "checked" : "") />
+				</td>
+				<td class="text-center" style="min-width: 75px;">
+					@Html.DisplayFor(modelItem => item.IsActive)
+				</td>
+				<td class="text-center" style="min-width: 75px;">
+					@Html.DisplayFor(modelItem => item.IsSold)
+				</td>
+				<td style="min-width: 150px;">
+					@item.UpdatedAt.ToString("yyyy/MM/dd")<br>
+					@item.UpdatedAt.ToString("tt hh:mm:ss")
+				</td>
+				<td class="align-middle" style="min-width: 150px;">
+					<div class="d-flex flex-column gap-2">
+						<a asp-controller="UsedBook" asp-action="UpdateBook" asp-route-id="@item.Id" asp-route-from="@Context.Request.Path" class="btn btn-sm btn-light border-secondary">編輯</a>
+						<form asp-controller="UsedBook" asp-action="DeleteBook" asp-route-id="@item.Id" method="post" onsubmit="return confirm('確定要刪除嗎？');">
+							<button type="submit" class="btn btn-warning btn-sm w-100">刪除</button>
+						</form>
+					</div>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+@section Scripts {
+	<!-- Lightbox JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+	<script>
+		lightbox.option({
+			'fadeDuration': 300,
+			'imageFadeDuration': 100,
+			'resizeDuration': 100
+		})
+	</script>
+}

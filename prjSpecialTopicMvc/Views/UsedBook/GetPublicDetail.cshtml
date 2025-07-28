@@ -1,0 +1,276 @@
+﻿@model prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Responses.PublicBookDetailDto
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+@section Styles {
+    <!-- Splide -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/splidejs/4.1.4/css/splide.min.css" />
+    <!-- (選用) Lightbox2：點主圖開大圖 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" />
+
+    <style>
+
+        /* 設定主圖外框 2:3 + 適應外部 col-3 */
+        #main-carousel .splide__slide {
+            aspect-ratio: 2 / 3;
+            width: 100%;
+            overflow: hidden;
+        }
+
+            /* 設定主圖內容 */
+            #main-carousel .splide__slide img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* 覆蓋滿區塊，圖片不變形 */
+                border-radius: 6px;
+            }
+
+        /* 選中的縮圖 slide 加黑框 */
+        #thumbnail-carousel .splide__slide.is-active img {
+            border: 2px solid #000;
+            border-radius: 4px;
+        }
+
+
+        /* 縮圖填滿 slide 並裁切，不變形 */
+        #thumbnail-carousel .splide__slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* display: block; */
+            border-radius: 6px;
+        }
+
+        /* 向左箭頭向左移出外面 */
+        .splide__arrow--prev {
+            left: -10px;
+        }
+
+        /* 向右箭頭向右移出外面 */
+        .splide__arrow--next {
+            right: -10px;
+        }
+
+        /* 讓箭頭更清楚一點 */
+        #thumbnail-carousel .splide__arrow {
+            background: #fff;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            box-shadow: 0 0 6px rgba(0,0,0,.15);
+        }
+    </style>
+}
+
+<div class="container-fluid bg-white p-5 mt-4">
+    <div class="container mb-2">
+        <div class="row mb-4">
+            <div class="col-sm-3">
+                <!-- 主圖輪播（導覽） -->
+                <div id="main-carousel" class="splide mb-3 shadow-sm rounded overflow-hidden bg-white">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            <!-- 主圖項目將由 JS 動態插入 -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 縮圖輪播（導覽） -->
+                <section id="thumbnail-carousel" class="splide px-2">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            <!-- 縮圖項目將由 JS 動態插入 -->
+                        </ul>
+                    </div>
+                </section>
+            </div>
+            <div class="col-sm-6">
+                <h4 class="fw-bold mb-4">@Model.Title</h4>
+                <hr />
+                <div class="mb-3">
+                    <span class="fw-semibold">@Html.DisplayNameFor(model => model.Authors)：</span>@Html.DisplayFor(model => model.Authors)
+                </div>
+
+                <div class="mb-3">
+                    <span class="fw-semibold">@Html.DisplayNameFor(model => model.Publisher)：</span><span class="me-4">@Html.DisplayFor(model => model.Publisher)</span>
+                    <span class="fw-semibold">@Html.DisplayNameFor(model => model.PublicationDate)：</span>@Html.DisplayFor(model => model.PublicationDate)
+                </div>
+
+                <div class="mb-3">
+                    <span class="fw-semibold">@Html.DisplayNameFor(model => model.Isbn)：</span>@Html.DisplayFor(model => model.Isbn)
+                </div>
+
+                <div class="mb-3">
+                    <span class="fw-semibold">@Html.DisplayNameFor(model => model.Pages)：</span><span class="me-4">@Html.DisplayFor(model => model.Pages)</span>
+                    <span class="fw-semibold">@Html.DisplayNameFor(model => model.Edition)：</span>@Html.DisplayFor(model => model.Edition)
+                </div>
+
+                <div class="mb-3">
+                    <span class="fw-semibold">@Html.DisplayNameFor(model => model.LanguageName)：</span><span class="me-4">@Html.DisplayFor(model => model.LanguageName)</span>
+                    <span class="fw-semibold">@Html.DisplayNameFor(model => model.BindingName)：</span>@Html.DisplayFor(model => model.BindingName)
+                </div>
+
+                <div class="mb-3">
+                    <span class="fw-semibold">@Html.DisplayNameFor(model => model.ContentRatingName)：</span>@Html.DisplayFor(model => model.ContentRatingName)
+                </div>
+
+                <hr />
+
+
+                <div class="mb-3 d-flex align-items-center">
+                    <span class="fw-semibold">書況評等：</span>
+                    <span class="badge bg-info text-dark">@Model.ConditionRatingName</span>
+                </div>
+
+                <div class="mb-3">
+                    <span class="fw-semibold">@Html.DisplayNameFor(model => model.ConditionDescription)：</span>
+                    <div class="text-body">@Html.DisplayFor(model => model.ConditionDescription)</div>
+                </div>
+
+                <hr />
+                @{
+                    var originalPrice = Model.SalePrice / 0.8m;
+                }
+                <div class="fs-5 fw-normal text-muted text-decoration-line-through">
+                    原價：NT$@originalPrice.ToString("N0")
+                </div>
+
+                <div class="mt-4">
+                    <span class="fs-5 fw-normal">二手價：</span>
+                    <span class="fs-2 fw-bold text-danger">NT$@Model.SalePrice.ToString("N0")</span>
+                </div>
+
+            </div>
+
+            <div class="col-sm-3 border border-secondary px-4 py-3">
+                <div class="mb-3">
+                    <p class="fw-semibold mb-0">賣家ID：</p>
+                    <span class="text-monospace">@Model.SellerId</span>
+                </div>
+
+                <div class="mb-3">
+                    <span class="fw-semibold">面交地點：</span>
+                    <i class="bi bi-geo-alt-fill text-secondary me-1"></i>
+                    <span>@Model.SellerCountyName @Model.SellerDistrictName</span>
+                </div>
+
+                <div class="mb-3">
+                    <p class="fw-semibold mb-0">@Html.DisplayNameFor(model => model.CreatedAt)：</p>
+                    <span class="me-2">@Model.CreatedAt.ToString("yyyy/MM/dd")</span><span>@Model.CreatedAt.ToString("tt hh:mm:ss")</span>
+                </div>
+
+                <div class="mb-3">
+                    <p class="fw-semibold mb-0">@Html.DisplayNameFor(model => model.UpdatedAt)：</p>
+                    <span class="me-2">@Model.UpdatedAt.ToString("yyyy/MM/dd")</span><span>@Model.UpdatedAt.ToString("tt hh:mm:ss")</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="container-fluid bg-white p-5">
+    <div class="container mb-2">
+        <h5>追蹤這本的人，也追蹤了...</h5>
+    </div>
+</div>
+<hr />
+<div class="container-fluid bg-white p-5">
+    <div class="container mb-2">
+        <h5>跟這本類似的有...</h5>
+    </div>
+</div>
+@section Scripts {
+
+    <!-- Splide -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/splidejs/4.1.4/js/splide.min.js"></script>
+    <!-- (選用) Lightbox2：點主圖開大圖 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+
+    <script>
+            document.addEventListener('DOMContentLoaded', async function () {
+
+            // ==========  參數定義 +　元素快取 + 初始化元件 ==========
+            const baseUrl = window.location.origin; // 僅限同源部署
+            const mainSplideList = document.querySelector("#main-carousel .splide__list");
+            const thumbSplideList = document.querySelector("#thumbnail-carousel .splide__list");
+
+            // 載入圖片
+            // Razor 直接輸出乾淨的 JSON 陣列
+            const imageList = @Html.Raw(
+            System.Text.Json.JsonSerializer.Serialize(
+                Model.ImageList.Select(x => new
+                {
+           id = x.Id,
+           storageProvider = x.StorageProvider,
+           objectKey = x.ObjectKey
+                })
+            )
+        );
+
+            for (const image of imageList) {
+                console.log(image);
+                // Provider 是 Local
+                if (image.storageProvider === 1) {
+
+                    const resMain = await fetch(`${baseUrl}/api/image/${image.objectKey}/main-url`);
+                    if (!resMain.ok)
+                        throw new Error(`HTTP ${resMain.status}`);
+                    const mainImageUrl = await resMain.text();
+
+                    const resThumb = await fetch(`${baseUrl}/api/image/${image.objectKey}/thumb-url`);
+                    if (!resThumb.ok)
+                        throw new Error(`HTTP ${resThumb.status}`);
+                    const thumbImageUrl = await resThumb.text();
+
+                    // 加入SplideList
+                    mainSplideList.insertAdjacentHTML('beforeend',
+                        `<li class="splide__slide">
+                            <a href="${mainImageUrl}" data-lightbox="${image.objectKey}">
+                                <img src="${thumbImageUrl}" alt="book-cover"/>
+                            </a>
+                        </li>`
+                    );
+
+                    thumbSplideList.insertAdjacentHTML('beforeend',
+                        `<li class="splide__slide shadow-sm rounded border border-light">
+                                <img src="${thumbImageUrl}" alt="">
+                        </li>`
+                    );
+                }
+            };
+
+
+            // Splide 主圖區域
+            var mainCarousel = new Splide( '#main-carousel', {
+                    type      : 'fade',
+                    rewind    : true,
+                    pagination: false,
+                    arrows    : false,
+                });
+
+            // Splide 縮圖區域
+            var thumbnailCarousel = new Splide( '#thumbnail-carousel', {
+                fixedWidth  : 80,
+                fixedHeight : 80,
+                gap         : 5,
+                rewind      : true,
+                pagination  : false,
+                isNavigation: true,
+                arrows      : true,
+            });
+
+            mainCarousel.sync(thumbnailCarousel);
+            mainCarousel.mount();
+            thumbnailCarousel.mount();
+
+            // Lightbox
+            lightbox.option({
+                'fadeDuration': 300,
+                'imageFadeDuration': 100,
+                'resizeDuration': 100
+            })
+        });
+    </script>
+}

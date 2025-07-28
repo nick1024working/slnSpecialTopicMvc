@@ -1,0 +1,495 @@
+﻿@model prjSpecialTopicMvc.ViewModels.UsedBook.UpdateBookViewModel
+
+@{
+    ViewData["Title"] = "UpdateBook";
+}
+
+<div class="container mt-4">
+	<h2 class="mb-3">編輯書本資料</h2>
+	<hr />
+
+	<form asp-action="UpdateBook" id="update-form" class="needs-validation" novalidate>
+		<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+		@Html.AntiForgeryToken()
+
+		<!-- 影像 Dropzone；真正要送出的值放在 .hidden-inputs -->
+		<div class="row mb-4">
+			<div class="col-md-12">
+				<label class="form-label">書本圖片 <small class="text-muted">(可拖曳排序)</small></label>
+				<div id="images-dropzone" class="dropzone"></div>
+				<div class="hidden-inputs"></div>
+				<div class="invalid-feedback">至少上傳 1 張圖片</div>
+			</div>
+		</div>
+		<hr />
+		<!-- 文字資料區域 -->
+		<div class="row mb-4">
+			<div class="col-md-12">
+				<label asp-for="Request.Title" class="form-label"></label>
+				<input asp-for="Request.Title" class="form-control" />
+				<span asp-validation-for="Request.Title" class="text-danger"></span>
+			</div>
+		</div>
+		<div class="row mb-4 g-3">
+			<div class="col-md-6">
+				<label asp-for="Request.Authors" class="form-label"></label>
+				<input asp-for="Request.Authors" class="form-control" />
+				<span asp-validation-for="Request.Authors" class="text-danger"></span>
+			</div>
+			<div class="col-md-6">
+				<label asp-for="Request.SalePrice" class="form-label"></label>
+				<div class="input-group">
+					<span class="input-group-text">NT$</span>
+					<input asp-for="Request.SalePrice" class="form-control" type="number" step="1" value="@string.Format("{0:0}", Model.Request.SalePrice)" />
+				</div>
+				<span asp-validation-for="Request.SalePrice" class="text-danger"></span>
+			</div>
+		</div>
+		<div class="row mb-4 g-3">
+			<div class="col-md-6">
+				<label asp-for="Request.ConditionRatingId" class="form-label"></label>
+				<select asp-for="Request.ConditionRatingId" asp-items="Model.BookConditionRatings" class="form-select">
+					<option value="" selected disabled> -- 請選擇書況評等 -- </option>
+				</select>
+				<span asp-validation-for="Request.ConditionRatingId" class="text-danger"></span>
+			</div>
+			<div class="col-md-6 d-flex align-items-center">
+				<div id="condition-description" class="static-tooltip-box">
+					<div class="tooltip-arrow"></div>
+					<div class="tooltip-content">
+						請先選擇書況評等
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row mb-4 g-3">
+			<div class="col-md-12">
+				<label asp-for="Request.ConditionDescription" class="form-label"></label>
+				<textarea asp-for="Request.ConditionDescription" class="form-control" rows="3"></textarea>
+				<span asp-validation-for="Request.ConditionDescription" class="text-danger"></span>
+			</div>
+		</div>
+		<hr />
+		<div class="row mb-4 g-3">
+			<div class="col-md-3">
+				<label asp-for="Request.Publisher" class="form-label"></label>
+				<input asp-for="Request.Publisher" class="form-control" />
+				<span asp-validation-for="Request.Publisher" class="text-danger"></span>
+			</div>
+			<div class="col-md-3">
+				<label asp-for="Request.PublicationDate" class="form-label"></label>
+				<div class="input-group" id="datepicker-publication">
+					<input type="text"
+						   class="form-control"
+						   name="Request.PublicationDate"
+						   data-input />
+					<span class="input-group-text" title="開啟日期選擇" data-toggle>
+						<i class="bi bi-calendar3"></i>
+					</span>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<label asp-for="Request.Isbn" class="form-label"></label>
+				<input asp-for="Request.Isbn" class="form-control" />
+				<span asp-validation-for="Request.Isbn" class="text-danger"></span>
+			</div>
+			<div class="col-md-3">
+				<label asp-for="Request.Pages" class="form-label"></label>
+				<input asp-for="Request.Pages" class="form-control" />
+				<span asp-validation-for="Request.Pages" class="text-danger"></span>
+			</div>
+		</div>
+		<div class="row mb-4 g-3">
+			<div class="col-md-3">
+				<label asp-for="Request.Edition" class="form-label"></label>
+				<input asp-for="Request.Edition" class="form-control" />
+				<span asp-validation-for="Request.Edition" class="text-danger"></span>
+			</div>
+			<div class="col-md-3">
+				<label asp-for="Request.BindingId" class="form-label"></label>
+				<select asp-for="Request.BindingId" asp-items="Model.BookBindings" class="form-select">
+					<option value="" selected disabled> -- 請選擇裝訂方式 -- </option>
+				</select>
+				<span asp-validation-for="Request.BindingId" class="text-danger"></span>
+			</div>
+			<div class="col-md-3">
+				<label asp-for="Request.LanguageId" class="form-label"></label>
+				<select asp-for="Request.LanguageId" asp-items="Model.Languages" class="form-select">
+					<option value="" selected disabled> -- 請選擇語言 -- </option>
+				</select>
+				<span asp-validation-for="Request.LanguageId" class="text-danger"></span>
+			</div>
+			<div class="col-md-3">
+				<label asp-for="Request.ContentRatingId" class="form-label"></label>
+				<select asp-for="Request.ContentRatingId" asp-items="Model.ContentRatings" class="form-select">
+					<option value="" selected disabled> -- 請選擇內容分級 -- </option>
+				</select>
+				<span asp-validation-for="Request.ContentRatingId" class="text-danger"></span>
+			</div>
+		</div>
+		<div class="row mb-4 g-3">
+			<div class="col-12">
+				<div class="form-check">
+					<input class="form-check-input" asp-for="Request.IsOnShelf" />
+					<label class="form-check-label" asp-for="Request.IsOnShelf">
+						@Html.DisplayNameFor(model => model.Request.IsOnShelf)
+					</label>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="row mb-4 g-3">
+			<div class="col-md-2 d-flex align-items-center">
+				<h6 class="my-auto">賣家指定面交地區</h6>
+			</div>
+			<!-- 縣市選單：純前端用途，不參與 ModelBinding -->
+			<div class="col-md-3">
+				<select asp-for="Request.SellerCountyId" asp-items="Model.Counties" class="form-select">
+					<option value="" selected disabled> -- 請選擇縣市 -- </option>
+				</select>
+				<span asp-validation-for="Request.SellerCountyId" class="text-danger"></span>
+			</div>
+			<!-- 鄉鎮市區選單：參與 ModelBinding 但需要由縣市選單選定後動態載入 -->
+			<div class="col-md-3">
+				<select asp-for="Request.SellerDistrictId" class="form-select">
+					<option value="" selected disabled>-- 選擇鄉鎮市區 --</option>
+				</select>
+				<span asp-validation-for="Request.SellerDistrictId" class="text-danger"></span>
+			</div>
+		</div>
+		<div class="row mb-4 g-3">
+			@* 提交按鈕 *@
+			<div class="col-12 text-end mt-3">
+				<button id="submit-btn" type="submit" class="btn btn-primary px-4">更新</button>
+				<a asp-controller="User" asp-action="GetUserBookList" class="btn btn-outline-secondary ms-2">返回清單</a>
+			</div>
+		</div>
+	</form>
+</div>
+
+@section Styles {
+	<!-- Animate.css -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+	<!-- dropzone 5.x 穩定版 -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css">
+	<!-- font-awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+	<!-- image-dropzone -->
+	<link rel="stylesheet" href="~/lib/sortableDropzone/sortableDropzone.css" asp-append-version="true" />
+
+}
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+
+	<!-- Sortable -->
+	<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+	<!-- dropzone 5.x 穩定版 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js"></script>
+
+	<!-- 驗證用 核心js -->
+	<script>
+		/* 先改全域預設： */
+		$.validator.setDefaults({
+			errorElement: 'div',
+			errorClass: 'invalid-feedback',
+			highlight: function (element) {
+				$(element).addClass('is-invalid').removeClass('is-valid');
+			},
+			unhighlight: function (element) {
+				$(element).addClass('is-valid').removeClass('is-invalid');
+			},
+			errorPlacement: function (error, element) {
+				if (element.parent('.input-group').length) {
+					error.insertAfter(element.parent());
+				} else if (element.is(':checkbox, :radio')) {
+					error.appendTo(element.closest('.form-check, .form-group'));
+				} else {
+					error.insertAfter(element);
+				}
+				error.addClass('d-block');
+			}
+		});
+	</script>
+
+	<!-- 鄉鎮市選單 核心js -->
+	<script>
+
+		// ==========  參數定義 +　元素快取 + 初始化元件 ==========
+		const countySelect = document.getElementById("@Html.IdFor(m => m.Request.SellerCountyId)");
+		const districtSelect = document.getElementById("@Html.IdFor(m => m.Request.SellerDistrictId)");
+
+		// ========== 宣告函數 ==========
+		// 使用非同步方式，依照 countyId 載入 district select。
+		function loadDistricts(countyId, selectedDistrictId = null) {
+
+			//  完成建立所有 DOM 前先鎖定
+			districtSelect.disabled = true;
+			districtSelect.innerHTML = `<option value="" disabled>-- 載入中 --</option>`;
+
+			// 使用 AJAX 非同步取得清單 UI
+			return fetch(`/api/lookup/districts?countyId=${countyId}`)
+				.then(async res => {
+					if (!res.ok) {
+						throw new Error(`HTTP ${res.status}：${res.statusText}`);
+					}
+
+					const contentType = res.headers.get("content-type") || "";
+					if (!contentType.includes("application/json")) {
+						throw new Error("伺服器回應格式錯誤，非 JSON");
+					}
+
+					const json = await res.json();
+					if (!json.isSuccess) {
+						throw new Error(json.errorMessage || "JSON載入失敗");
+					}
+
+					return json.value;
+				})
+				.then(data => {
+
+					let options = '<option value="" selected disabled>-- 請選擇鄉鎮市 --</option>';
+					data.forEach(d => {
+						options += `<option value="${d.value}">${d.text}</option>`;
+					});
+					districtSelect.innerHTML = options;
+					districtSelect.disabled = false;
+
+					if (selectedDistrictId)
+						districtSelect.value = selectedDistrictId.toString();
+				})
+				.catch(err => {
+					console.error("載入鄉鎮市失敗：", err);
+					districtSelect.disabled = true;
+					districtSelect.innerHTML = `<option value="" disabled>-- 載入失敗：${err.message} --</option>`;
+				});
+		}
+
+		// ==========  事件綁定 ==========
+
+		// 使用者改變縣市時，重載鄉鎮市
+		countySelect.addEventListener("change", () => {
+			loadDistricts(countySelect.value);
+		});
+
+		/// ========== 這裡是正常執行 ==========
+
+		//  如果進頁面時就有 CountyId，馬上載入 Districts 並選中舊值
+		const initialCountyId   = '@Model.Request.SellerCountyId';
+		const initialDistrictId = '@Model.Request.SellerDistrictId';
+		if (initialCountyId) {
+			countySelect.value = initialCountyId;
+			loadDistricts(initialCountyId, initialDistrictId);
+		}
+
+	</script>
+
+	<!-- 圖片上傳 + 送出表單 核心js -->
+	<script type="module">
+
+		// ========== 匯入模組 ==========
+		import sortableDropzone from '/lib/sortableDropzone/sortableDropzone.js';
+
+		// ========== 宣告預設參數 ==========
+		// 定義新增的圖片 preview DOM 結構
+		const previewTemplate = `
+		<div class="dz-preview dz-file-preview position-relative d-inline-block me-2 mb-2">
+			<img data-dz-thumbnail class="img-thumbnail" style="width: 120px; height: 120px; object-fit: cover;" draggable="false" />
+
+			<!-- 拖曳 handle（放左上角） -->
+			<i class="fas fa-grip position-absolute top-0 start-0 m-1 p-1 rounded-1 text-secondary"
+			title="拖曳排序" style="cursor: move; background-color: white"></i>
+
+			<!-- 移除按鈕（右上角） -->
+			<button class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1"
+			data-dz-remove title="移除圖片">&times;</button>
+		</div>
+		`;
+
+		// ==========  參數定義 + 元素快取 ==========
+		const baseUrl = window.location.origin; // 僅限同源部署
+		const form = document.querySelector("#update-form");
+		const sdz = sortableDropzone.init(document.querySelector('#images-dropzone'), previewTemplate);
+		const btn = document.querySelector("#submit-btn");
+
+
+		/// ========== 這裡是正常執行 ==========
+
+		// 載入圖片
+		// Razor 直接輸出乾淨的 JSON 陣列
+		const imageList = @Html.Raw(
+			System.Text.Json.JsonSerializer.Serialize(
+				Model.Request.ImageList.Select(x => new
+				{
+					id = x.Id,
+					storageProvider = x.StorageProvider,
+					objectKey = x.ObjectKey
+				})));
+
+		for (const image of imageList) {
+
+			// Provider 是 Local
+			if (image.storageProvider === 1) {
+
+				const res = await fetch(`${baseUrl}/api/image/${image.objectKey}/thumb-url`);
+				if (!res.ok)
+					throw new Error(`HTTP ${res.status}`);
+				const imageUrl = await res.text();
+
+				// 模擬檔案
+				const imageFile = {
+					name: image.objectKey,
+					id: image.id,
+					storageProvider: image.storageProvider,
+					objectKey: image.objectKey,
+					accepted: true
+				};
+
+				// 加入至 Dropzone 中（但不會真的上傳）
+				sdz.emit("addedfile", imageFile);				// 加入檔案卡片
+				sdz.emit("thumbnail", imageFile, imageUrl);		// 加入縮圖預覽
+				sdz.emit("complete", imageFile);
+
+				// 加入 Dropzone 陣列
+				sdz.files.push(imageFile);
+			}
+		};
+
+
+		// ==========  核心函數 (將用於事件綁定) ==========
+
+		// 客製化驗證欄位 for #images-dropzone
+		// 確認是否合法 (照片須至少一張)
+		// HTML 原生 required 不支援 Sortable Dropzone
+		function checkAndSetImageValidation() {
+			const domObj = document.querySelector('#images-dropzone');
+			const hasFiles = sdz.files.length > 0;
+			if (!hasFiles) {
+				domObj.classList.add("border", "border-danger", "is-invalid");
+				domObj.classList.remove("is-valid");
+			} else {
+				domObj.classList.remove("border", "border-danger", "is-invalid");
+				domObj.classList.add("is-valid");
+			}
+			return hasFiles;
+		}
+
+		// 已整合的表單驗證函數
+		function isFormValid() {
+
+			let isValid = true;
+
+			// 圖片欄位用 客製化驗證
+			isValid = checkAndSetImageValidation() && isValid;
+
+			// 文字欄位用 用 jQuery Validation 驗證
+			isValid = $(form).valid() && isValid;
+
+			return isValid;
+		}
+
+		async function uploadImagesAsync(imageList) {
+
+			// 組裝 request payload
+			const formData = new FormData();
+			for (const image of imageList) {
+				formData.append("files", image);
+			}
+
+			// 呼叫 Provider API 保存圖片
+			const res = await fetch(`${baseUrl}/api/image/batch`, {
+				method: "POST",
+				body: formData
+			});
+
+			if (!res.ok) {
+				const text = await res.text();
+				throw new Error(`圖片上傳失敗 (${res.status}): ${text}`);
+			}
+
+			return res.json();
+		}
+
+		// ==========  事件綁定  ==========
+
+		sdz.on("addedfile", () => {
+			checkAndSetImageValidation();
+		});
+
+		sdz.on("removedfile", () => {
+			checkAndSetImageValidation();
+		});
+
+
+		btn.addEventListener("click", async function (event) {
+			event.preventDefault();
+			event.stopPropagation();
+
+			// 驗證表單
+			if (!isFormValid())
+				return;
+
+			// 以下開始手動組裝表單
+			const fd = new FormData();
+
+			// 把原本表單欄位加入
+			new FormData(form).forEach((v, k) => fd.append(k, v));
+
+
+			// 再把 ImageRequest[*] 欄位加入
+
+			// 檢索新圖片
+
+			// NOTE:由於 dropzone.getAcceptedFiles() 無序，
+			// 我們需要改依序搜尋 previews 並確認是否存在於 dropzone.files()
+			const previews = document.querySelectorAll("#images-dropzone .dz-preview");
+			const sortedFiles = Array.from(previews).map(preview => {
+				return sdz.files.find(file =>
+					file.previewElement === preview &&
+					document.body.contains(file.previewElement)
+				);
+			});
+
+			const uploadList = [];
+			const uploadIndex = [];
+
+			sortedFiles.forEach((img, i) => {
+				if (!img.objectKey) {
+					uploadList.push(img);
+					uploadIndex.push(i);
+				}
+			});
+
+			// 上傳新圖片
+			const imageUploadResult = await uploadImagesAsync(uploadList);
+
+			// 組裝 ImageList[i]
+			sortedFiles.forEach((img, i) => {
+				const pos = uploadIndex.indexOf(i);
+				fd.append(`Request.ImageList[${i}].Id`, pos !== -1 ? '' : img.id);
+				fd.append(`Request.ImageList[${i}].IsCover`, i === 0);
+				fd.append(`Request.ImageList[${i}].StorageProvider`, pos !== -1 ? 1 : img.storageProvider);
+				fd.append(`Request.ImageList[${i}].ObjectKey`, pos !== -1 ? imageUploadResult[pos].id : img.objectKey);
+				fd.append(`Request.ImageList[${i}].Sha256`, '47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=');
+			});
+
+			// 加上 Anti-Forgery Token（從隱藏欄位抓）
+			const token = form.querySelector('input[name="__RequestVerificationToken"]').value;
+
+			// 手動送出表單
+			const res = await fetch('/usedbooks/update/@Model.BookId', {
+				method: 'POST',
+				body: fd,
+				headers: { 'RequestVerificationToken': token }
+			});
+
+			if (res.redirected) {
+				window.location.href = res.url; // 等同於原本 return RedirectToAction
+			}
+		});
+
+	</script>
+}

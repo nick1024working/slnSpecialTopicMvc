@@ -3,7 +3,7 @@ using prjSpecialTopicMvc.Features.Usedbook.Application.Services;
 using prjSpecialTopicMvc.Features.Usedbook.Extends;
 using prjSpecialTopicMvc.Features.Usedbook.Utilities;
 
-namespace prjBookAppCoreMVC.Controllers.UsedBook
+namespace prjSpecialTopicMvc.Controllers.UsedBook
 {
     [ApiController]
     [Route("api/image")]

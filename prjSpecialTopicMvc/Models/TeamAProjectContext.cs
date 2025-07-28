@@ -87,6 +87,8 @@ public partial class TeamAProjectContext : DbContext
 
     public virtual DbSet<UsedBook> UsedBooks { get; set; }
 
+    public virtual DbSet<UsedBookImage> UsedBookImages { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -907,6 +909,25 @@ public partial class TeamAProjectContext : DbContext
                         j.HasKey("BookId", "TagId").HasName("PK__UsedBook__EBB70D9D2021EBB2");
                         j.ToTable("UsedBookSaleTags");
                     });
+        });
+
+        modelBuilder.Entity<UsedBookImage>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__UsedBook__3214EC075499035F");
+
+            entity.HasIndex(e => new { e.StorageProvider, e.ObjectKey }, "UQ__UsedBook__19B1FA1062B04E70").IsUnique();
+
+            entity.HasIndex(e => new { e.BookId, e.ImageIndex }, "UQ__UsedBook__D26AE137D347BF97").IsUnique();
+
+            entity.Property(e => e.ObjectKey).HasMaxLength(300);
+            entity.Property(e => e.Sha256)
+                .HasMaxLength(32)
+                .IsFixedLength();
+            entity.Property(e => e.UploadedAt).HasDefaultValueSql("(sysutcdatetime())");
+
+            entity.HasOne(d => d.Book).WithMany(p => p.UsedBookImages)
+                .HasForeignKey(d => d.BookId)
+                .HasConstraintName("FK__UsedBookI__BookI__4C0144E4");
         });
 
         modelBuilder.Entity<User>(entity =>

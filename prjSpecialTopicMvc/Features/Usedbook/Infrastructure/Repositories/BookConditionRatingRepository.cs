@@ -1,0 +1,30 @@
+﻿using Microsoft.EntityFrameworkCore;
+using prjSpecialTopicMvc.Models;
+using prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Results;
+
+namespace prjSpecialTopicMvc.Features.Usedbook.Infrastructure.Repositories
+{
+    public class BookConditionRatingRepository
+    {
+        private readonly TeamAProjectContext _db;
+
+        public BookConditionRatingRepository(TeamAProjectContext db)
+        {
+            _db = db;
+        }
+
+        public async Task<IReadOnlyList<BookConditionRatingResult>> GetAllAsync(CancellationToken ct = default)
+        {
+            return await _db.BookConditionRatings
+                .AsNoTracking()
+                .OrderBy(x => x.Id)
+                .Select(x => new BookConditionRatingResult
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description
+                })
+                .ToListAsync(ct);
+        } 
+    }
+}

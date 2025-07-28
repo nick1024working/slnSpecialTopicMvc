@@ -1,0 +1,44 @@
+﻿@using prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Responses
+@model IEnumerable<BookSaleTagDto>
+
+@{
+    ViewData["Title"] = "SaleTagList";
+}
+
+<h1>SaleTagList</h1>
+
+<p>
+    <a asp-action="CreateSaleTag">新增促銷標籤</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                    <a asp-action="UpdateSaleTagName" asp-route-id="@item.Id">修改名稱</a> |
+                    <form asp-action="DeleteSaleTag" asp-route-id="@item.Id" method="post" style="display:inline" onsubmit="return confirm('確定要刪除嗎？');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-link text-danger p-0 border-0">刪除</button>
+                    </form>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

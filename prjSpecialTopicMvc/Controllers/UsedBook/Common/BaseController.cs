@@ -2,7 +2,7 @@
 using prjSpecialTopicMvc.Controllers;
 using prjSpecialTopicMvc.Features.Usedbook.Utilities;
 
-namespace prjBookAppCoreMVC.Controllers.UsedBook.Common
+namespace prjSpecialTopicMvc.Controllers.UsedBook.Common
 {
     /// <summary>
     /// 提供共用的 Controller 功能基底類別，例如導向錯誤頁與型別安全的 Redirect 方法。
