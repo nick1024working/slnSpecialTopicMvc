@@ -1,0 +1,40 @@
+﻿/* dropzone 主要容器 */
+#images-dropzone {
+    border: 1px solid grey;
+    background-color: whiteSmoke;
+    border-radius: 0.5rem;
+    /* 給內部 .dz-message 定位用 */
+    position: relative;
+    min-height: 190px;
+    overflow: hidden;
+}
+
+/* dropzone 中預設底文字調整 */
+/* 原因: 當 image review 刪除並撥放效果時， */
+/* 需覆寫 dropzone 對此元素的控制 */
+.dz-message {
+    /* 覺上存在但不影響實際佈局 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* 取消 Dropzone 的預設 margin */
+    margin: 0 !important;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--bs-secondary);
+}
+
+/* image review 刪除時效果 */
+.animate__fadeOutDown {
+    --animate-duration: 0.7s;
+}
+
+/* image review 移動時隱藏佔位元素(僅占位不顯示) */
+/* 原因: 會出現 ghost 不好看 */
+.sortable-ghost {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: all 0.2s ease;
+}

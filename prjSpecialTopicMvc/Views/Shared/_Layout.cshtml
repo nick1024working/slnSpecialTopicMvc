@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>破爛電子書管理系統</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@700;800&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="~/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="~/css/style.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <!-- Navbar Start -->
+    <div class="container-fluid nav-bar bg-transparent">
+        <nav class="navbar navbar-expand-lg bg-white navbar-light py-0 px-4">
+            <a asp-controller="Home" asp-action="Index" class="navbar-brand d-flex align-items-center text-center">
+                <div class="">
+                    <img class="logo-img" src="~/img/破爛電子書logo.png" alt="Icon">
+                </div>
+            </a>
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ms-auto">
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">會員管理</a>
+                        <div class="dropdown-menu rounded-0 m-0">
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="List">檢視</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Create">新增</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Edit">修改</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Delete">刪除</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">電子書</a>
+                        <div class="dropdown-menu rounded-0 m-0">
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="List">檢視</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Create">新增</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Edit">修改</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Delete">刪除</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">二手書</a>
+                        <div class="dropdown-menu rounded-0 m-0">
+                            a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="List">檢視</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Create">新增</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Edit">修改</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Delete">刪除</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">募資</a>
+                        <div class="dropdown-menu rounded-0 m-0">
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="List">檢視</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Create">新增</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Edit">修改</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Delete">刪除</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">討論區</a>
+                        <div class="dropdown-menu rounded-0 m-0">
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="List">檢視</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Create">新增</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Edit">修改</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Delete">刪除</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!-- Navbar End -->
+    <main role="main" class="pb-3 container-xxl">
+        @RenderBody()
+    </main>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - 破爛電子書 - 版權所有翻版必究<a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
+        </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/wow/wow.min.js"></script>
+    <script src="~/lib/easing/easing.min.js"></script>
+    <script src="~/lib/waypoints/waypoints.min.js"></script>
+    <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="~/js/main.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

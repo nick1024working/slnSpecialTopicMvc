@@ -1,0 +1,21 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace prjSpecialTopicMvc.Models;
+
+public partial class DonatePlan
+{
+    public int DonatePlanId { get; set; }
+
+    public int DonateProjectId { get; set; }
+
+    public string Title { get; set; } = null!;
+
+    public decimal Price { get; set; }
+
+    public string? Description { get; set; }
+
+    public virtual ICollection<DonateOrderItem> DonateOrderItems { get; set; } = new List<DonateOrderItem>();
+
+    public virtual DonateProject DonateProject { get; set; } = null!;
+}
