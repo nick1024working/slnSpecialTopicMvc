@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 
 namespace prjSpecialTopicMvc.Models;
@@ -26,11 +27,12 @@ public partial class ForumPost
     public int CommentCount { get; set; }
 
     public bool IsDeleted { get; set; }
-
+    [ValidateNever]
     public virtual PostFilter Filter { get; set; } = null!;
 
-    public virtual ICollection<PostBookmark> PostBookmarks { get; set; } = new List<PostBookmark>();
 
+    public virtual ICollection<PostBookmark> PostBookmarks { get; set; } = new List<PostBookmark>();
+    [ValidateNever]
     public virtual PostCategory PostCategory { get; set; } = null!;
 
     public virtual ICollection<PostComment> PostComments { get; set; } = new List<PostComment>();
@@ -38,6 +40,6 @@ public partial class ForumPost
     public virtual PostImage? PostImage { get; set; }
 
     public virtual ICollection<PostLike> PostLikes { get; set; } = new List<PostLike>();
-
+    [ValidateNever]
     public virtual User UidNavigation { get; set; } = null!;
 }
