@@ -1,0 +1,41 @@
+﻿@model IEnumerable<prjSpecialTopicMvc.Models.EBookMain>
+
+@{
+    ViewData["Title"] = $"「{ViewBag.LabelName}」標籤下的書籍";
+}
+
+<h1>@ViewBag.LabelName</h1>
+<p>
+    以下是所有包含「@ViewBag.LabelName」標籤的書籍。
+    <br />
+    您可以點擊每本書籍的「標籤管理」按鈕，來移除此標籤。
+</p>
+<p>
+    <a asp-action="Index" class="btn btn-secondary">返回標籤總管</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>書籍 ID</th>
+            <th>書名</th>
+            <th>作者</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.EbookId</td>
+                <td>@item.EbookName</td>
+                <td>@item.Author</td>
+                <td>
+                    <a asp-controller="Ebook" asp-action="ManageTags" asp-route-id="@item.EbookId" class="btn btn-sm btn-outline-dark" target="_blank">
+                        標籤管理
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

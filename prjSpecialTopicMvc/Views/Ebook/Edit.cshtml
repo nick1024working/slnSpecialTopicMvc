@@ -1,0 +1,279 @@
+﻿@model prjSpecialTopicMvc.ViewModels.EBook.EbookFormViewModel
+
+@{
+    ViewData["Title"] = "編輯電子書";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>@Model.Ebook.EbookName</h4>
+
+@* vvvvv 請將這段偵錯碼完整地複製並貼到此處 vvvvv *@
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <h4>ModelState 隱藏錯誤清單：</h4>
+        <ul>
+            @foreach (var key in ViewData.ModelState.Keys)
+            {
+                foreach (var error in ViewData.ModelState[key].Errors)
+                {
+                    <li>欄位 (Key): @key | 錯誤訊息: @error.ErrorMessage</li>
+                }
+            }
+        </ul>
+    </div>
+}
+@* ^^^^^ 請將這段偵錯碼完整地複製並貼到此處 ^^^^^ *@
+
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @* 隱藏欄位，用來將 EbookId 等重要資訊傳回 Controller *@
+            <input type="hidden" asp-for="Ebook.EbookId" />
+
+            @* --- 主要資訊 --- *@
+            <div class="form-group mb-3">
+                <label asp-for="Ebook.EbookName" class="control-label"></label>
+                <input asp-for="Ebook.EbookName" class="form-control" />
+                <span asp-validation-for="Ebook.EbookName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Ebook.Author" class="control-label"></label>
+                <input asp-for="Ebook.Author" class="form-control" />
+                <span asp-validation-for="Ebook.Author" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Ebook.BookDescription" class="control-label">書籍簡介 (選填)</label>
+                <textarea asp-for="Ebook.BookDescription" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Ebook.BookDescription" class="text-danger"></span>
+            </div>
+
+            @* --- 分類 --- *@
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="SelectedCategoryId" class="control-label"></label>
+                        <select asp-for="SelectedCategoryId" class="form-select" asp-items="Model.CategoryOptions">
+                            <option value="">-- 請選擇現有分類 --</option>
+                        </select>
+                        <span asp-validation-for="SelectedCategoryId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="NewCategoryName" class="control-label"></label>
+                        <input asp-for="NewCategoryName" class="form-control" />
+                    </div>
+                </div>
+            </div>
+
+            @* --- 出版資訊 --- *@
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Ebook.Publisher" class="control-label">出版社 (選填)</label>
+                        <input asp-for="Ebook.Publisher" class="form-control" />
+                        <span asp-validation-for="Ebook.Publisher" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Ebook.PublishedDate" class="control-label">出版日期 (選填)</label>
+                        <input asp-for="Ebook.PublishedDate" type="date" class="form-control" />
+                        <span asp-validation-for="Ebook.PublishedDate" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Ebook.Translator" class="control-label">譯者 (選填)</label>
+                        <input asp-for="Ebook.Translator" class="form-control" />
+                        <span asp-validation-for="Ebook.Translator" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Ebook.Language" class="control-label">語言 (選填)</label>
+                        <input asp-for="Ebook.Language" class="form-control" />
+                        <span asp-validation-for="Ebook.Language" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            @* --- ↓↓↓ 在此處新增以下程式碼 ↓↓↓ --- *@
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Ebook.Isbn" class="control-label">ISBN (選填)</label>
+                        <input asp-for="Ebook.Isbn" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Ebook.Eisbn" class="control-label">EISBN (選填)</label>
+                        <input asp-for="Ebook.Eisbn" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Ebook.PublishedCountry" class="control-label">出版國家 (選填)</label>
+                <input asp-for="Ebook.PublishedCountry" class="form-control" />
+            </div>
+            @* --- ↑↑↑ 新增到此處為止 ↑↑↑ --- *@
+
+            @* --- 銷售與價格 --- *@
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Ebook.FixedPrice" class="control-label"></label>
+                        <input asp-for="Ebook.FixedPrice" class="form-control" />
+                        <span asp-validation-for="Ebook.FixedPrice" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Ebook.ActualPrice" class="control-label">實際售價 (選填)</label>
+                        <input asp-for="Ebook.ActualPrice" class="form-control" />
+                        <span asp-validation-for="Ebook.ActualPrice" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            @* --- ↓↓↓ 在此處新增以下程式碼 ↓↓↓ --- *@
+            <hr />
+            <h5>銷售與統計 (後台管理用)</h5>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label asp-for="Ebook.Weeksales" class="control-label"></label>
+                        <input asp-for="Ebook.Weeksales" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label asp-for="Ebook.Monthsales" class="control-label"></label>
+                        <input asp-for="Ebook.Monthsales" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label asp-for="Ebook.Totalsales" class="control-label"></label>
+                        <input asp-for="Ebook.Totalsales" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label asp-for="Ebook.Weekviews" class="control-label"></label>
+                        <input asp-for="Ebook.Weekviews" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label asp-for="Ebook.Monthviews" class="control-label"></label>
+                        <input asp-for="Ebook.Monthviews" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label asp-for="Ebook.Totalviews" class="control-label"></label>
+                        <input asp-for="Ebook.Totalviews" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            @* --- ↑↑↑ 新增到此處為止 ↑↑↑ --- *@
+
+            @* --- 檔案管理 --- *@
+            <hr />
+            <h5>檔案管理</h5>
+            <div class="form-group mb-3">
+                <label asp-for="EbookFile" class="control-label"></label>
+                <input asp-for="EbookFile" type="file" class="form-control" />
+                <small class="form-text text-muted">目前檔案: @Model.Ebook.EBookPosition (上傳新檔將會覆蓋)</small>
+            </div>
+
+            <h5>管理本書所有圖片</h5>
+            <div class="row mb-3">
+                @if (Model.ExistingImages != null && Model.ExistingImages.Any())
+                {
+                    foreach (var image in Model.ExistingImages)
+                    {
+                        <div class="col-md-3 text-center mb-3">
+                            <img src="@Url.Content(image.ImagePath)" class="img-thumbnail mb-2" style="max-height: 150px; display: block; margin: auto;" />
+
+                            @* 註解：刪除圖片的 Checkbox *@
+                            <div class="form-check mb-2">
+                                <input type="checkbox" name="ImagesToDelete" value="@image.ImageId" class="form-check-input" />
+                                <label class="form-check-label">刪除此圖</label>
+                            </div>
+
+                            @* 註解：設定主封面的 Radio Button *@
+                            <div class="form-check">
+                                <input type="radio" name="NewPrimaryImageId" value="@image.ImageId" class="form-check-input" id="primary_@image.ImageId" @(image.IsPrimary ? "checked" : "") />
+                                <label class="form-check-label" for="primary_@image.ImageId">
+                                    @if (image.IsPrimary)
+                                    {
+                                        <span class="badge bg-success">主封面</span>
+                                    }
+                                    else
+                                    {
+                                        <span>設為主封面</span>
+                                    }
+                                </label>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>尚無圖片</p>
+                }
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="CoverImages" class="control-label">上傳新圖片 (可一次選多張)</label>
+                <input asp-for="CoverImages" type="file" multiple class="form-control" />
+            </div>
+
+            @* --- 其他設定 --- *@
+            <hr />
+            <h5>其他設定</h5>
+            @* --- ↓↓↓ 在此處新增以下程式碼 ↓↓↓ --- *@
+            <div class="form-group mb-3" style="width: 200px;">
+                <label asp-for="Ebook.MaturityRating" class="control-label">分級</label>
+                <select asp-for="Ebook.MaturityRating" class="form-select">
+                    <option value="0">0 (普遍級)</option>
+                    <option value="1">1 (保護級)</option>
+                    <option value="2">2 (限制級)</option>
+                </select>
+            </div>
+            @* --- ↑↑↑ 新增到此處為止 ↑↑↑ --- *@
+            <div class="form-group form-check mb-3">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Ebook.IsAvailable" /> @Html.DisplayNameFor(model => model.Ebook.IsAvailable)
+                </label>
+            </div>
+
+
+            <div class="form-group mt-4">
+                <input type="submit" value="儲存變更" class="btn btn-primary" />
+                <a asp-action="List" class="btn btn-secondary">返回列表</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

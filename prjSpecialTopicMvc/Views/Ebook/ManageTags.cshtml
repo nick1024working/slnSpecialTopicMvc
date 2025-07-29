@@ -1,0 +1,101 @@
+﻿@model prjSpecialTopicMvc.ViewModels.EBook.ManageEbookTagsViewModel
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+
+@{
+    ViewData["Title"] = "標籤管理";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h4>書籍：@Model.EbookName</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="ManageTags">
+            <input type="hidden" asp-for="EbookId" />
+
+            <div class="card">
+                <div class="card-header">
+                    請勾選要指派給本書的標籤
+                </div>
+                <div id="labels-container" class="card-body" style="max-height: 400px; overflow-y: auto;">
+                    @foreach (var label in Model.AllLabels.OrderBy(l => l.LabelName))
+                    {
+                        @* 註解：修正後的 checkbox 結構，確保文字不會斷行 *@
+                        <div class="form-check" style="white-space: nowrap;">
+                            <input type="checkbox" name="selectedLabelIds" value="@label.LabelId" class="form-check-input" @(label.IsAssigned ? "checked" : "") />
+                            <label class="form-check-label">@label.LabelName</label>
+                        </div>
+                    }
+                </div>
+
+                <div class="card-footer">
+                    @* 註解：修正後的 UI 結構，讓輸入框和按鈕能正常顯示 *@
+                    <div class="mb-2">
+                        <input type="text" id="new-label-name" class="form-control" placeholder="輸入新標籤名稱...">
+                        <div id="add-label-error" class="text-danger mt-1 small"></div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary w-100" type="button" id="btn-add-label">AJAX 即時新增標籤</button>
+
+                    @* 註解：【*** 新增的連結 ***】
+                        這個連結會帶使用者到我們之前建立的 LabelsController 的 Index 頁面。
+                        target="_blank" 會讓它在新的瀏覽器分頁中打開，不會中斷目前的編輯流程。
+                    *@
+                    <a asp-controller="Labels" asp-action="Index" class="btn btn-sm btn-outline-info w-100 mt-2" target="_blank">
+                        管理所有標籤 (開啟新分頁)
+                    </a>
+                </div>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="儲存標籤指派" class="btn btn-primary" />
+                <a asp-action="List" class="btn btn-secondary">返回列表</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#btn-add-label').on('click', function () {
+                var newLabelName = $('#new-label-name').val().trim();
+                var errorDiv = $('#add-label-error');
+                errorDiv.text('');
+
+                if (!newLabelName) {
+                    errorDiv.text('標籤名稱不可為空。');
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("CreateLabelAjax", "Labels")',
+                    type: 'POST',
+                    headers: {
+                        'RequestVerificationToken': '@Xsrf.GetAndStoreTokens(Context).RequestToken'
+                    },
+                    data: JSON.stringify({ LabelName: newLabelName }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        if (response.success) {
+                            var newLabelHtml = '<div class="form-check" style="white-space: nowrap;">' +
+                                '<input type="checkbox" name="selectedLabelIds" value="' + response.label.labelId + '" class="form-check-input" checked />' +
+                                '<label class="form-check-label">' + response.label.labelName + '</label>' +
+                                '</div>';
+
+                            $('#labels-container').prepend(newLabelHtml);
+                            $('#new-label-name').val('');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        var errorMsg = "新增失敗，請稍後再試。";
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        }
+                        errorDiv.text(errorMsg);
+                    }
+                });
+            });
+        });
+    </script>
+}

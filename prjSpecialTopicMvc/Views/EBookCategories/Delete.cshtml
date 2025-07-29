@@ -1,0 +1,26 @@
+﻿@model prjSpecialTopicMvc.Models.EBookCategory
+
+@{
+    ViewData["Title"] = "刪除分類";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h3 class="text-danger">您確定要刪除這個分類嗎?</h3>
+<div>
+    <h4>@Model.CategoryName</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-4">分類名稱</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(model => model.CategoryName)</dd>
+        <dt class="col-sm-4">上層分類</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(model => model.ParentCategory.CategoryName)</dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="CategoryId" />
+        <input type="submit" value="確認刪除" class="btn btn-danger" />
+        <a asp-action="List" class="btn btn-secondary">返回列表</a>
+    </form>
+</div>
+

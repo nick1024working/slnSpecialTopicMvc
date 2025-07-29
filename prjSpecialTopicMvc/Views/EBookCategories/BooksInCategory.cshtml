@@ -1,0 +1,43 @@
+﻿@model IEnumerable<prjSpecialTopicMvc.Models.EBookMain>
+
+@{
+    // 從 ViewBag 取得分類名稱，並設定為頁面標題
+    ViewData["Title"] = $"「{ViewBag.CategoryName}」分類下的書籍";
+}
+
+<h1>@ViewData["Title"]</h1>
+<p>
+    以下是所有歸屬於「@ViewBag.CategoryName」(ID: @ViewBag.CategoryId) 分類的書籍。
+    <br />
+    您可以點擊每本書籍的「編輯」按鈕，將其分類轉移到其他正確的分類下。
+</p>
+<p>
+    <a asp-action="List" class="btn btn-secondary">返回分類列表</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>書籍 ID</th>
+            <th>書名</th>
+            <th>作者</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.EbookId</td>
+                <td>@item.EbookName</td>
+                <td>@item.Author</td>
+                <td>
+                    @* 產生一個連結，讓使用者可以跳轉到 EbookController 的編輯頁面 *@
+                    <a asp-controller="Ebook" asp-action="Edit" asp-route-id="@item.EbookId" class="btn btn-sm btn-outline-success" target="_blank">
+                        轉移分類 (編輯)
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,29 @@
+﻿@model prjSpecialTopicMvc.Models.Label
+@{
+    ViewData["Title"] = "新增標籤";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+@* 註解：移除了外層的 col-md-4 和 row，改用一個固定寬度的 div 包住整個表單 *@
+<div style="width: 400px;">
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group mb-3">
+            <label asp-for="LabelName" class="control-label">標籤名稱</label>
+            <input asp-for="LabelName" class="form-control" />
+            <span asp-validation-for="LabelName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="建立" class="btn btn-primary" />
+            <a asp-action="Index" class="btn btn-secondary">返回列表</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

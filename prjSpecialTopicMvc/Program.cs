@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using prjSpecialTopicMvc.Models;
+using prjSpecialTopicMvc.Models.MEbook;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,19 @@ builder.Services.AddDbContext<TeamAProjectContext>(options =>
 builder.Services.AddControllersWithViews();
 
 // ========== 各自需要的服務於以下註冊 ==========
+
+
+// 下方的 EbookService 是 IEbookService 的實作類別，請換成您實際的類別名稱
+builder.Services.AddScoped<IEbookService, EbookService>();
+// !!! 請在這裡加入 IFileService 的註冊 !!!
+// 假設您的實作類別叫做 FileService，請根據您的專案修改
+builder.Services.AddScoped<IFileService, FileService>();
+// 註解：註冊我們的分類服務。注意 using 的是新命名空間
+
+builder.Services.AddScoped<IEBookCategoryService, EBookCategoryService>();
+
+// 【*** 新增此行 ***】
+builder.Services.AddScoped<ILabelsService, LabelsService>();
 
 
 
