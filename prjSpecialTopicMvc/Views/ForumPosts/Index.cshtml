@@ -1,89 +1,37 @@
 ﻿@model IEnumerable<prjSpecialTopicMvc.Models.ForumPost>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "文章列表";
 }
 
-<h1>Index</h1>
+<h1 class="mb-4">@ViewData["Title"]</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ViewCount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LikeCount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CommentCount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsDeleted)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Filter)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PostCategory)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UidNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ViewCount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LikeCount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CommentCount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsDeleted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Filter.PostFilterId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PostCategory.PostCategoryId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UidNavigation.Uid)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.PostId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.PostId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.PostId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm border-primary">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">@item.Title</h5>
+                    <p class="card-text text-muted">
+                        @((item.Content?.Length ?? 0) > 80 ? item.Content.Substring(0, 80) + "..." : item.Content)
+                    </p>
+                    <p class="card-text">
+                        <span class="badge bg-info text-dark">分類: @item.PostCategory?.PostCategoryName</span>
+                        <span class="badge bg-warning text-dark">標籤: @item.Filter?.FilterName</span>
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">發布時間: @item.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small><br />
+                        <small class="text-muted">瀏覽數: @item.ViewCount</small>
+                    </p>
+                </div>
+                <div class="card-footer text-end">
+                    <a asp-action="Details" asp-route-id="@item.PostId" class="btn btn-sm btn-outline-primary me-2">查看</a>
+                    <a asp-action="Edit" asp-route-id="@item.PostId" class="btn btn-sm btn-outline-secondary">編輯</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<a asp-action="Create" class="btn btn-success mt-4">新增文章</a>

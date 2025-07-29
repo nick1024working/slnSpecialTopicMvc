@@ -1,75 +1,61 @@
-﻿@model prjSpecialTopicMvc.Models.ForumPost
+﻿@model prjSpecialTopicMvc.ViewModels.Forum.ForumPostViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "新增文章";
 }
 
-<h1>Create</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>ForumPost</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Uid" class="control-label"></label>
-                <select asp-for="Uid" class ="form-control" asp-items="ViewBag.Uid"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="PostCategoryId" class="control-label"></label>
-                <select asp-for="PostCategoryId" class ="form-control" asp-items="ViewBag.PostCategoryId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="FilterId" class="control-label"></label>
-                <select asp-for="FilterId" class ="form-control" asp-items="ViewBag.FilterId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
-                <span asp-validation-for="Content" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ViewCount" class="control-label"></label>
-                <input asp-for="ViewCount" class="form-control" />
-                <span asp-validation-for="ViewCount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LikeCount" class="control-label"></label>
-                <input asp-for="LikeCount" class="form-control" />
-                <span asp-validation-for="LikeCount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CommentCount" class="control-label"></label>
-                <input asp-for="CommentCount" class="form-control" />
-                <span asp-validation-for="CommentCount" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<!-- 成功訊息 -->
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<!-- 錯誤提示 -->
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="ForumPost.Title"></label>
+        <input asp-for="ForumPost.Title" class="form-control" />
+        <span asp-validation-for="ForumPost.Title" class="text-danger"></span>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div class="form-group">
+        <label asp-for="ForumPost.Content"></label>
+        <textarea asp-for="ForumPost.Content" class="form-control"></textarea>
+        <span asp-validation-for="ForumPost.Content" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SelectedCategoryId"></label>
+        <select asp-for="SelectedCategoryId" class="form-control" asp-items="Model.Categories">
+            <option value="">-- 請選擇分類 --</option>
+        </select>
+        <span asp-validation-for="SelectedCategoryId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SelectedFilterId"></label>
+        <select asp-for="SelectedFilterId" class="form-control" asp-items="Model.Filters">
+            <option value="">-- 請選擇標籤 --</option>
+        </select>
+        <span asp-validation-for="SelectedFilterId" class="text-danger"></span>
+    </div>
+
+
+    <input type="hidden" asp-for="ForumPost.CreatedAt" />
+    <input type="hidden" asp-for="ForumPost.ViewCount" />
+    <input type="hidden" asp-for="ForumPost.LikeCount" />
+    <input type="hidden" asp-for="ForumPost.CommentCount" />
+    <input type="hidden" asp-for="ForumPost.IsDeleted" />
+
+    <button type="submit" class="btn btn-primary mt-3">送出</button>
+</form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
