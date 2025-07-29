@@ -1,7 +1,7 @@
 ﻿@using prjSpecialTopicMvc.Controllers.UsedBook
 @using prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Responses
 
-@model IEnumerable<AdminBookListItemDto>
+@model IEnumerable<UserBookListItemDto>
 @{
 	var currentSort = Context.Request.Query["sortBy"].ToString();
 	var currentDir = Context.Request.Query["sortDir"].ToString();
@@ -31,9 +31,6 @@
 			</th>
 			<th>
 				@Html.DisplayNameFor(model => model.IsOnShelf)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.IsActive)
 			</th>
 			<th>
 				@Html.DisplayNameFor(model => model.IsSold)
@@ -88,16 +85,6 @@
 					@Html.DisplayFor(modelItem => item.IsOnShelf)
 				</td>
 				<td class="text-center" style="min-width: 70px;">
-					@Html.DisplayFor(modelItem => item.IsActive)
-				</td>
-				@* <td class="text-center" style="min-width: 70px;"> *@
-				@* 	<input type="checkbox" *@
-				@* 		   class="form-check-input toggle-checkbox" *@
-				@* 		   data-id="@item.Id" *@
-				@* 		   data-field="IsActive" *@
-				@* 	@(item.IsActive ? "checked" : "") /> *@
-				@* </td> *@
-				<td class="text-center" style="min-width: 70px;">
 					@Html.DisplayFor(modelItem => item.IsSold)
 				</td>
 				<td style="min-width: 120px;" class="fs-8">
@@ -110,7 +97,7 @@
 				</td>
 				<td class="align-middle" style="min-width: 120px;">
 					<div class="d-flex flex-column gap-2">
-						<a asp-controller="UsedBook" asp-action="UpdateBook" asp-route-id="@item.Id" asp-route-from="@Url.Action(nameof(UsedbookAdminController.GetAdminBookList))" class="btn btn-sm btn-light border-secondary">編輯</a>
+						<a asp-controller="UsedBook" asp-action="UpdateBook" asp-route-id="@item.Id" asp-route-from="@Url.Action(nameof(UsedBookUserController.GetUserBookList))" class="btn btn-sm btn-light border-secondary">編輯</a>
 						<form asp-controller="UsedBook" asp-action="DeleteBook" asp-route-id="@item.Id" method="post" onsubmit="return confirm('確定要刪除嗎？');">
 							<button type="submit" class="btn btn-warning btn-sm w-100">刪除</button>
 						</form>

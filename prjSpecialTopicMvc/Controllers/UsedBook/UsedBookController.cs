@@ -61,7 +61,7 @@ namespace prjSpecialTopicMvc.Controllers.UsedBook
         /// 新增書本
         /// </summary>
         [HttpGet("create")]
-        [Authorize(Roles = RoleNames.Admin)]
+        [Authorize(Roles = RoleNames.Seller)]
         public async Task<IActionResult> CreateBook(CancellationToken ct)
         {
             // 取得所有 UI下拉選單 List<SelectListItem>
@@ -104,7 +104,7 @@ namespace prjSpecialTopicMvc.Controllers.UsedBook
                 return RedirectToError(commandResult);
 
             TempData["msg"] = "已新增二手書！";
-            return RedirectToAction(nameof(GetPublicBookList));
+            return RedirectToAction(nameof(UsedBookUserController.GetUserBookList), "UsedBookUser");
         }
 
         /// <summary>

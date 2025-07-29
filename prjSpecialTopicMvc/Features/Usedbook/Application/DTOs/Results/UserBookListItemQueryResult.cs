@@ -8,6 +8,7 @@ namespace prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Results
         public string? CoverObjectKey { get; set; }
 
         public Guid Id { get; set; }
+        public Guid SellerId { get; set; }
         public string Title { get; set; } = string.Empty;
         public decimal SalePrice { get; set; }
         public string ConditionRating { get; set; } = string.Empty;
@@ -17,5 +18,6 @@ namespace prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Results
         public string Slug { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

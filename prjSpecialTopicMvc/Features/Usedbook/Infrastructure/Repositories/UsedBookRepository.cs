@@ -179,7 +179,7 @@ namespace prjSpecialTopicMvc.Features.Usedbook.Infrastructure.Repositories
                 .Include(b => b.UsedBookImages)
                 .Include(b => b.ConditionRating)
                 .Where(b => b.IsOnShelf && b.IsActive && b.UsedBookImages.Any(x => x.IsCover))
-                .OrderBy(b => b.UpdatedAt)
+                .OrderByDescending(b => b.UpdatedAt)
                 .Select(b => new PublicBookListItemQueryResult
                 {
                     CoverStorageProvider = (StorageProvider)b.UsedBookImages.First(x => x.IsCover).StorageProvider,
@@ -198,37 +198,48 @@ namespace prjSpecialTopicMvc.Features.Usedbook.Infrastructure.Repositories
         /// <summary>
         /// 根據 UserId 查詢該使用者書本清單 (清單項目資料，非詳細資料)。
         /// </summary>
-        public async Task<IReadOnlyList<UserBookListItemQueryResult>> GetUserBookListAsync(Guid userId, CancellationToken ct = default)
+        public async Task<IReadOnlyList<UserBookListItemQueryResult>> GetUserBookListAsync(
+            Guid userId,
+            Expression<Func<UsedBook, bool>> predicate,
+            Func<IQueryable<UsedBook>, IOrderedQueryable<UsedBook>> orderBy,
+            CancellationToken ct = default)
         {
-            var books = await _db.UsedBooks
+            // 1. 建立查詢（包含條件與關聯載入）
+            var query = _db.UsedBooks
+                .AsNoTracking()
+                .Where(b => b.SellerId == userId)
+                .Where(predicate)
                 .Include(b => b.UsedBookImages)
-                .Include(b => b.ContentRating)
-                .Where(b => b.SellerId == userId && b.IsActive)
-                .OrderByDescending(b => b.CreatedAt)
-                .ToListAsync(ct);
+                .Include(b => b.ContentRating);
 
-            var queryResult = books
-                .Select(b => {
-                    var coverImage = b.UsedBookImages.FirstOrDefault(x => x.IsCover);
-                    return new UserBookListItemQueryResult
-                    {
-                        CoverStorageProvider = (StorageProvider?)coverImage?.StorageProvider,
-                        CoverObjectKey = coverImage?.ObjectKey,
-                        Id = b.Id,
-                        SalePrice = b.SalePrice,
-                        Title = b.Title,
-                        ConditionRating = b.ContentRating.Name,
+            // 2. 套用排序
+            var orderedQuery = orderBy(query);
 
-                        IsOnShelf = b.IsOnShelf,
-                        IsSold = b.IsSold,
-                        Slug = b.Slug,
+            // 3. 投影成結果
+            var result = await orderedQuery
+            .Select(b => new
+            {
+                Book = b,
+                CoverImage = b.UsedBookImages.FirstOrDefault(x => x.IsCover)
+            })
+            .Select(x => new UserBookListItemQueryResult
+            {
+                Id = x.Book.Id,
+                SellerId = x.Book.SellerId,
+                SalePrice = x.Book.SalePrice,
+                Title = x.Book.Title,
+                ConditionRating = x.Book.ContentRating.Name,
+                IsOnShelf = x.Book.IsOnShelf,
+                IsSold = x.Book.IsSold,
+                Slug = x.Book.Slug,
+                CoverStorageProvider = (StorageProvider?)x.CoverImage.StorageProvider,
+                CoverObjectKey = x.CoverImage.ObjectKey,
+                CreatedAt = x.Book.CreatedAt,
+                UpdatedAt = x.Book.UpdatedAt,
+            })
+            .ToListAsync(ct);
 
-                        CreatedAt = b.CreatedAt
-                    };
-                })
-                .ToList();
-
-            return queryResult;
+            return result;
         }
 
         // TODO: 需要分頁 補呼叫鏈上 query + filter

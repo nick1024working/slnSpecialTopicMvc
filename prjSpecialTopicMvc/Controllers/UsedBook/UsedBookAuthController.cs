@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using prjSpecialTopicMvc.Controllers.UsedBook.Common;
 using prjSpecialTopicMvc.Features.Usedbook.Application.Authentication;
+using prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Responses;
+using prjSpecialTopicMvc.Features.Usedbook.Application.Errors;
+using prjSpecialTopicMvc.Features.Usedbook.Enums;
 
 namespace prjSpecialTopicMvc.Controllers.UsedBook
 {
@@ -14,13 +17,15 @@ namespace prjSpecialTopicMvc.Controllers.UsedBook
 
         [HttpGet]
         public IActionResult Index()
-            => View();
+        {
+            return View();
+        }
 
         [HttpPost("login-admin")]
         public async Task<IActionResult> LoginAdmin()
         {
-            string userId = "EC70B00F-2F1C-4682-A007-EA53F5540683";
-            string userName = "Admin Nick";
+            string userId = "22B888CB-32AB-4B07-96BF-228B60D3717A";
+            string userName = "Admin user554";
             string roleName = RoleNames.Admin;
 
             var claims = new List<Claim>

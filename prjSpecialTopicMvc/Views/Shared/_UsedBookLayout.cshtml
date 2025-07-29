@@ -39,6 +39,26 @@
             color: #0E2E50;
             font-weight: 500;
         }
+
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* 限制最多顯示 2 行 */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .fs-7 {
+            font-size: 0.875rem; /* 約 14px */
+        }
+
+        .fs-8 {
+            font-size: 0.75rem; /* 約 12px */
+        }
+
+        .fs-9 {
+            font-size: 0.7rem;
+        }
     </style>
 
     @await RenderSectionAsync("Styles", required: false)
@@ -81,8 +101,8 @@
                         <div class="dropdown-menu rounded-0 m-0">
                             <a class="dropdown-item" asp-controller="UsedBook" asp-action="GetPublicBookList">公開商品列表</a>
                             <hr class="dropdown-divider">
-                            <a class="dropdown-item" asp-controller="UsedBookAuth" asp-action="Index">授權</a>
-                            <a class="dropdown-item" asp-controller="UsedBookUser" asp-action="Me">使用者身分</a>
+                            <a class="dropdown-item" asp-controller="UsedBookAuth" asp-action="Index">使用者驗證</a>
+                            <a class="dropdown-item" asp-controller="UsedBookUser" asp-action="Me">當前使用者</a>
                             <form asp-controller="UsedBookAuth" asp-action="Logout" method="post">
                                 <button type="submit" class="dropdown-item border-0 bg-transparent">登出</button>
                             </form>

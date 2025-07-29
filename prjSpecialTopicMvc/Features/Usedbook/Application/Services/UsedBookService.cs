@@ -208,11 +208,38 @@ namespace prjSpecialTopicMvc.Features.Usedbook.Application.Services
         /// <summary>
         /// 根據 UserId 查詢該使用者書本清單 (清單項目資料，非詳細資料)。
         /// </summary>
-        public async Task<Result<IReadOnlyList<UserBookListItemDto>>> GetUserBookListAsync(Guid userId, CancellationToken ct = default)
+        public async Task<Result<IReadOnlyList<UserBookListItemDto>>> GetUserBookListAsync(Guid userId, BookListQuery query, CancellationToken ct = default)
         {
             try
             {
-                var queryResult = await _usedBookRepository.GetUserBookListAsync(userId, ct);
+                // 條件
+                Expression<Func<UsedBook, bool>> predicate = b =>
+                    (
+                        string.IsNullOrWhiteSpace(query.BookStatus) ||
+                        (query.BookStatus == "all") ||
+                        (query.BookStatus == "unsold" && !b.IsSold) ||
+                        (query.BookStatus == "onshelf" && b.IsOnShelf)
+                    ) &&
+                    (string.IsNullOrWhiteSpace(query.Keyword) || b.Title.Contains(query.Keyword)) &&
+                    (!query.MinPrice.HasValue || b.SalePrice >= query.MinPrice) &&
+                    (!query.MaxPrice.HasValue || b.SalePrice <= query.MaxPrice);
+
+                // 排序
+                Func<IQueryable<UsedBook>, IOrderedQueryable<UsedBook>> orderBy = q =>
+                {
+                    return query switch
+                    {
+                        _ when query.SortBy == "updated" && query.SortDir == "asc" => q.OrderBy(b => b.UpdatedAt),
+                        _ when query.SortBy == "updated" && query.SortDir == "desc" => q.OrderByDescending(b => b.UpdatedAt),
+                        _ when query.SortBy == "created" && query.SortDir == "asc" => q.OrderBy(b => b.CreatedAt),
+                        _ when query.SortBy == "created" && query.SortDir == "desc" => q.OrderByDescending(b => b.CreatedAt),
+                        _ when query.SortBy == "price" && query.SortDir == "asc" => q.OrderBy(b => b.SalePrice),
+                        _ when query.SortBy == "price" && query.SortDir == "desc" => q.OrderByDescending(b => b.SalePrice),
+                        _ => q.OrderByDescending(b => b.UpdatedAt) // fallback
+                    };
+                };
+
+                var queryResult = await _usedBookRepository.GetUserBookListAsync(userId, predicate, orderBy, ct);
                 var dtoList = new List<UserBookListItemDto>();
                 foreach (var res in queryResult)
                 {
@@ -252,6 +279,12 @@ namespace prjSpecialTopicMvc.Features.Usedbook.Application.Services
             {
                 // 條件
                 Expression<Func<UsedBook, bool>> predicate = b =>
+                    (
+                        string.IsNullOrWhiteSpace(query.BookStatus) ||
+                        (query.BookStatus == "all") ||
+                        (query.BookStatus == "unsold" && !b.IsSold) ||
+                        (query.BookStatus == "onshelf" && b.IsOnShelf)
+                    ) &&
                     (string.IsNullOrWhiteSpace(query.Keyword) || b.Title.Contains(query.Keyword)) &&
                     (!query.MinPrice.HasValue || b.SalePrice >= query.MinPrice) &&
                     (!query.MaxPrice.HasValue || b.SalePrice <= query.MaxPrice);
@@ -261,11 +294,13 @@ namespace prjSpecialTopicMvc.Features.Usedbook.Application.Services
                 {
                     return query switch
                     {
+                        _ when query.SortBy == "updated" && query.SortDir == "asc" => q.OrderBy(b => b.UpdatedAt),
+                        _ when query.SortBy == "updated" && query.SortDir == "desc" => q.OrderByDescending(b => b.UpdatedAt),
                         _ when query.SortBy == "created" && query.SortDir == "asc" => q.OrderBy(b => b.CreatedAt),
                         _ when query.SortBy == "created" && query.SortDir == "desc" => q.OrderByDescending(b => b.CreatedAt),
                         _ when query.SortBy == "price" && query.SortDir == "asc" => q.OrderBy(b => b.SalePrice),
                         _ when query.SortBy == "price" && query.SortDir == "desc" => q.OrderByDescending(b => b.SalePrice),
-                        _ => q.OrderByDescending(b => b.CreatedAt) // fallback
+                        _ => q.OrderByDescending(b => b.UpdatedAt) // fallback
                     };
                 };
 

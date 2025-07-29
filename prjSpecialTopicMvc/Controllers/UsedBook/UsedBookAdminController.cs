@@ -45,7 +45,7 @@ namespace prjSpecialTopicMvc.Controllers.UsedBook
         }
 
         [HttpGet("books/partial")]
-        public async Task<IActionResult> GetUserBookListPartial([FromQuery] BookListQuery query)
+        public async Task<IActionResult> GetAdminBookListPartial([FromQuery] BookListQuery query)
         {
             // 呼叫 Service Layer
             var result = await _usedBookService.GetAdminBookListAsync(query);

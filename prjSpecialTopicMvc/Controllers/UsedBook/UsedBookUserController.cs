@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using prjSpecialTopicMvc.Controllers.UsedBook.Common;
 using prjSpecialTopicMvc.Features.Usedbook.Application.Authentication;
+using prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Queries;
 using prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Responses;
 using prjSpecialTopicMvc.Features.Usedbook.Application.Errors;
+using prjSpecialTopicMvc.Features.Usedbook.Application.Services;
 using prjSpecialTopicMvc.Features.Usedbook.Enums;
 using prjSpecialTopicMvc.Features.Usedbook.Extends;
-using prjSpecialTopicMvc.Features.Usedbook.Application.Services;
 
 namespace prjSpecialTopicMvc.Controllers.UsedBook
 {
@@ -48,14 +49,15 @@ namespace prjSpecialTopicMvc.Controllers.UsedBook
         /// 取得使用者所有書本資訊列表
         /// </summary>
         [HttpGet("me/books")]
-        public async Task<IActionResult> GetUserBookList()
+        [Authorize(Roles = RoleNames.Seller)]
+        public async Task<IActionResult> GetUserBookList([FromQuery] BookListQuery query)
         {
             // 嘗試取出 claims 中的 userId
             if (AuthHelper.GetUserId(User) is not Guid userId)
                 return RedirectToAction("Error", "Home", new { code = ErrorCodes.Auth.Unauthorized, message = "授權失敗" });
 
             // 呼叫 Service Layer
-            var result = await _usedBookService.GetUserBookListAsync(userId);
+            var result = await _usedBookService.GetUserBookListAsync(userId, query);
             if (!result.IsSuccess)
                 return RedirectToError(result);
 
@@ -70,6 +72,32 @@ namespace prjSpecialTopicMvc.Controllers.UsedBook
             }
 
             return View(result.Value);
+        }
+
+        [HttpGet("me/books/partial")]
+        [Authorize(Roles = RoleNames.Seller)]
+        public async Task<IActionResult> GetAdminBookListPartial([FromQuery] BookListQuery query)
+        {
+            // 嘗試取出 claims 中的 userId
+            if (AuthHelper.GetUserId(User) is not Guid userId)
+                return RedirectToAction("Error", "Home", new { code = ErrorCodes.Auth.Unauthorized, message = "授權失敗" });
+
+            // 呼叫 Service Layer
+            var result = await _usedBookService.GetUserBookListAsync(userId, query);
+            if (!result.IsSuccess)
+                return RedirectToError(result);
+
+            // 補 CoverUrl 路徑
+            var baseUrl = Request.GetBaseUrl();
+            foreach (var dto in result.Value)
+            {
+                if (!string.IsNullOrEmpty(dto.CoverImageUrl) && dto.CoverImageUrl.StartsWith("/"))
+                {
+                    dto.CoverImageUrl = $"{baseUrl}{dto.CoverImageUrl}";
+                }
+            }
+
+            return PartialView("_UserBookListTable", result.Value);
         }
 
         //[HttpPatch("{orderNo}")]

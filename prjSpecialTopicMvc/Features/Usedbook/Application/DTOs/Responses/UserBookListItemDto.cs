@@ -27,5 +27,8 @@ namespace prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Responses
 
         [Display(Name = "建立時間")]
         public DateTime CreatedAt { get; set; }
+
+        [Display(Name = "更新時間")]
+        public DateTime UpdatedAt { get; set; }
     }
 }
