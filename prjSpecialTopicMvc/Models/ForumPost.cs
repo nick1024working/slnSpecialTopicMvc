@@ -31,6 +31,7 @@ public partial class ForumPost
     [ValidateNever] // ✅ 不驗證
     public virtual PostFilter Filter { get; set; } = null!;
 
+
     public virtual ICollection<PostBookmark> PostBookmarks { get; set; } = new List<PostBookmark>();
 
     [ValidateNever] // ✅ 不驗證
