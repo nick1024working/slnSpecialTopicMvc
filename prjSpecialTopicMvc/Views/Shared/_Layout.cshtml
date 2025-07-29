@@ -68,7 +68,7 @@
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">二手書</a>
                         <div class="dropdown-menu rounded-0 m-0">
-                            a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="List">檢視</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="List">檢視</a>
                             <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Create">新增</a>
                             <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Edit">修改</a>
                             <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Delete">刪除</a>
@@ -86,10 +86,10 @@
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">討論區</a>
                         <div class="dropdown-menu rounded-0 m-0">
-                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="List">檢視</a>
-                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Create">新增</a>
-                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Edit">修改</a>
-                            <a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Delete">刪除</a>
+                            <a class="dropdown-item" asp-controller="ForumPosts" asp-action="Index">文章列表</a>
+                            <a class="dropdown-item" asp-controller="ForumPosts" asp-action="Create">發表文章</a>
+                            <!-- 若 Edit/Delete 要傳 id，這裡可以先省略或改成 View 列表點入 -->
+                            <!-- 或改成管理用的控制面板連結 -->
                         </div>
                     </div>
                 </div>
