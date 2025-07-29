@@ -8,7 +8,7 @@ namespace prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Queries
     public class BookListQuery
     {
         /// <summary>關鍵字搜尋 (書名 / 作者 / ISBN)。</summary>
-        public string? Q { get; init; }
+        public string? Keyword { get; init; }
 
         /// <summary>主分類 ID；若為 null 表示全部。</summary>
         public Guid? CategoryId { get; init; }

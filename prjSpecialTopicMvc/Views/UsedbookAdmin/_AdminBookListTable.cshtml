@@ -1,0 +1,93 @@
+﻿@using prjSpecialTopicMvc.Controllers.UsedBook
+@using prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Responses
+@model IEnumerable<AdminBookListItemDto>
+@{
+	var currentSort = Context.Request.Query["sortBy"].ToString();
+	var currentDir = Context.Request.Query["sortDir"].ToString();
+}
+
+<table class="table table-hover">
+	<thead>
+		<tr class="text-start align-middle">
+			<th>
+				圖片
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Title)
+			</th>
+			<th>
+				<a href="#" class="sort-header text-body text-decoration-none" data-sort="price">
+					@Html.DisplayNameFor(model => model.SalePrice)
+					@if (currentSort == "price")
+					{
+						<i class="bi @(currentDir == "asc" ? "bi-sort-numeric-up" : "bi-sort-numeric-down") ms-1"></i>
+					}
+				</a>
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.IsOnShelf)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.IsActive)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.IsSold)
+			</th>
+			<th>
+				<a href="#" class="sort-header text-body text-decoration-none" data-sort="created">
+					@Html.DisplayNameFor(model => model.CreatedAt)
+					@if (currentSort == "created")
+					{
+						<i class="bi @(currentDir == "asc" ? "bi-sort-numeric-up" : "bi-sort-numeric-down") ms-1"></i>
+					}
+				</a>
+			</th>
+			<th>
+				修改
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr class="text-start align-middle">
+				<td>
+					<a href="@item.CoverImageUrl" data-lightbox="book-image-@item.Id" data-title="@item.Title">
+						<img src="@item.CoverImageUrl" alt="book-cover" style="max-height: 120px" class="img-thumbnail" />
+					</a>
+				</td>
+				<td class="text-start text-wrap text-break">
+					<a href="/usedbooks/@item.Slug">@item.Title</a>
+				</td>
+				<td class="text-start" style="min-width: 100px;">
+					@($"NT${item.SalePrice:N0}")
+				</td>
+				<td class="text-center" style="min-width: 75px;">
+					<input type="checkbox"
+						   class="form-check-input toggle-checkbox"
+						   data-id="@item.Id"
+						   data-field="IsOnShelf"
+					@(item.IsOnShelf ? "checked" : "") />
+				</td>
+				<td class="text-center" style="min-width: 75px;">
+					@Html.DisplayFor(modelItem => item.IsActive)
+				</td>
+				<td class="text-center" style="min-width: 75px;">
+					@Html.DisplayFor(modelItem => item.IsSold)
+				</td>
+				<td style="min-width: 150px;">
+					@item.CreatedAt.ToString("yyyy/MM/dd")<br>
+					@item.CreatedAt.ToString("tt hh:mm:ss")
+				</td>
+				<td class="align-middle" style="min-width: 150px;">
+					<div class="d-flex flex-column gap-2">
+						<a asp-controller="UsedBook" asp-action="UpdateBook" asp-route-id="@item.Id" asp-route-from="@Url.Action(nameof(UsedbookAdminController.GetAdminBookList))" class="btn btn-sm btn-light border-secondary">編輯</a>
+						<form asp-controller="UsedBook" asp-action="DeleteBook" asp-route-id="@item.Id" method="post" onsubmit="return confirm('確定要刪除嗎？');">
+							<button type="submit" class="btn btn-warning btn-sm w-100">刪除</button>
+						</form>
+					</div>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

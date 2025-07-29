@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Requests;
 using prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Results;
 using prjSpecialTopicMvc.Features.Usedbook.Enums;
@@ -234,39 +235,47 @@ namespace prjSpecialTopicMvc.Features.Usedbook.Infrastructure.Repositories
         /// <summary>
         /// 管理員查詢書本清單 (清單項目資料，非詳細資料)。
         /// </summary>
-        public async Task<IReadOnlyList<AdminBookListItemQueryResult>> GetAdminBookListAsync(CancellationToken ct = default)
+        public async Task<IReadOnlyList<AdminBookListItemQueryResult>> GetAdminBookListAsync(
+            Expression<Func<UsedBook, bool>> predicate,
+            Func<IQueryable<UsedBook>, IOrderedQueryable<UsedBook>> orderBy,
+            CancellationToken ct = default)
         {
-            var books = await _db.UsedBooks
+            // 1. 建立查詢（包含條件與關聯載入）
+            var query = _db.UsedBooks
+                .AsNoTracking()
+                .Where(predicate)
                 .Include(b => b.UsedBookImages)
-                .Include(b => b.ContentRating)
-                .ToListAsync(ct);
+                .Include(b => b.ContentRating);
 
-            var queryResult = books
-                .OrderByDescending(b => b.UpdatedAt)
-                .Select(b => {
-                    var coverImage = b.UsedBookImages.FirstOrDefault(x => x.IsCover);
-                    return new AdminBookListItemQueryResult
-                    {
-                        CoverStorageProvider = (StorageProvider?)coverImage?.StorageProvider,
-                        CoverObjectKey = coverImage?.ObjectKey,
-                        Id = b.Id,
-                        SellerId = b.SellerId,
-                        SalePrice = b.SalePrice,
-                        Title = b.Title,
-                        ConditionRating = b.ContentRating.Name,
+            // 2. 套用排序
+            var orderedQuery = orderBy(query);
 
-                        IsOnShelf = b.IsOnShelf,
-                        IsActive = b.IsActive,
-                        IsSold = b.IsSold,
-                        Slug = b.Slug,
+            // 3. 投影成結果
+            var result = await orderedQuery
+            .Select(b => new
+            {
+                Book = b,
+                CoverImage = b.UsedBookImages.FirstOrDefault(x => x.IsCover)
+            })
+            .Select(x => new AdminBookListItemQueryResult
+            {
+                Id = x.Book.Id,
+                SellerId = x.Book.SellerId,
+                SalePrice = x.Book.SalePrice,
+                Title = x.Book.Title,
+                ConditionRating = x.Book.ContentRating.Name,
+                IsOnShelf = x.Book.IsOnShelf,
+                IsActive = x.Book.IsActive,
+                IsSold = x.Book.IsSold,
+                Slug = x.Book.Slug,
+                CoverStorageProvider = (StorageProvider?)x.CoverImage.StorageProvider,
+                CoverObjectKey = x.CoverImage.ObjectKey,
+                CreatedAt = x.Book.CreatedAt,
+                UpdatedAt = x.Book.UpdatedAt,
+            })
+            .ToListAsync(ct);
 
-                        CreatedAt = b.CreatedAt,
-                        UpdatedAt = b.UpdatedAt
-                    };
-                })
-                .ToList();
-
-            return queryResult;
+            return result;
         }
 
         /// <summary>

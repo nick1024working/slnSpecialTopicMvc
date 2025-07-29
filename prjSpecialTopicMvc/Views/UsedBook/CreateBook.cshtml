@@ -125,9 +125,9 @@
 			<div class="col-md-3">
 				<label asp-for="Request.PublicationDate" class="form-label"></label>
 				<div class="input-group" id="datepicker-publication">
-					<input type="text"
+					<input asp-for="Request.PublicationDate"
+						   type="text"
 						   class="form-control"
-						   name="Request.PublicationDate"
 						   data-input />
 					<span class="input-group-text" title="開啟日期選擇" data-toggle>
 						<i class="bi bi-calendar3"></i>

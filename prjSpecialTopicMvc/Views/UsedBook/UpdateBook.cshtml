@@ -79,9 +79,9 @@
 			<div class="col-md-3">
 				<label asp-for="Request.PublicationDate" class="form-label"></label>
 				<div class="input-group" id="datepicker-publication">
-					<input type="text"
+					<input asp-for="Request.PublicationDate"
+						   type="text"
 						   class="form-control"
-						   name="Request.PublicationDate"
 						   data-input />
 					<span class="input-group-text" title="開啟日期選擇" data-toggle>
 						<i class="bi bi-calendar3"></i>
@@ -157,6 +157,10 @@
 				<span asp-validation-for="Request.SellerDistrictId" class="text-danger"></span>
 			</div>
 		</div>
+
+		<!-- 隱藏欄位，綁定來源用 -->
+		<input asp-for="From" type="hidden" />
+
 		<div class="row mb-4 g-3">
 			@* 提交按鈕 *@
 			<div class="col-12 text-end mt-3">

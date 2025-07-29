@@ -44,6 +44,27 @@ namespace prjSpecialTopicMvc.Controllers.UsedBook
             return View(result.Value);
         }
 
+        [HttpGet("books/partial")]
+        public async Task<IActionResult> GetUserBookListPartial([FromQuery] BookListQuery query)
+        {
+            // 呼叫 Service Layer
+            var result = await _usedBookService.GetAdminBookListAsync(query);
+            if (!result.IsSuccess)
+                return RedirectToError(result);
+
+            // 補 CoverUrl 路徑
+            var baseUrl = Request.GetBaseUrl();
+            foreach (var dto in result.Value)
+            {
+                if (!string.IsNullOrEmpty(dto.CoverImageUrl) && dto.CoverImageUrl.StartsWith("/"))
+                {
+                    dto.CoverImageUrl = $"{baseUrl}{dto.CoverImageUrl}";
+                }
+            }
+
+            return PartialView("_AdminBookListTable", result.Value);
+        }
+
 
         /// <summary>
         /// 管理員為指定書籍指派促銷標籤

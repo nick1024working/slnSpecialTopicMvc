@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace prjSpecialTopicMvc.Models;
+﻿namespace prjSpecialTopicMvc.Models;
 
 public partial class UsedBook
 {

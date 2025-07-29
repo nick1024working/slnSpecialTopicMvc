@@ -8,6 +8,8 @@ using prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Responses;
 using prjSpecialTopicMvc.Features.Usedbook.Application.Errors;
 using prjSpecialTopicMvc.Features.Usedbook.Enums;
 using prjSpecialTopicMvc.Features.Usedbook.Utilities;
+using System.Linq.Expressions;
+using System;
 
 namespace prjSpecialTopicMvc.Features.Usedbook.Application.Services
 {
@@ -248,7 +250,26 @@ namespace prjSpecialTopicMvc.Features.Usedbook.Application.Services
         {
             try
             {
-                var queryResult = await _usedBookRepository.GetAdminBookListAsync(ct);
+                // 條件
+                Expression<Func<UsedBook, bool>> predicate = b =>
+                    (string.IsNullOrWhiteSpace(query.Keyword) || b.Title.Contains(query.Keyword)) &&
+                    (!query.MinPrice.HasValue || b.SalePrice >= query.MinPrice) &&
+                    (!query.MaxPrice.HasValue || b.SalePrice <= query.MaxPrice);
+
+                // 排序
+                Func<IQueryable<UsedBook>, IOrderedQueryable<UsedBook>> orderBy = q =>
+                {
+                    return query switch
+                    {
+                        _ when query.SortBy == "created" && query.SortDir == "asc" => q.OrderBy(b => b.CreatedAt),
+                        _ when query.SortBy == "created" && query.SortDir == "desc" => q.OrderByDescending(b => b.CreatedAt),
+                        _ when query.SortBy == "price" && query.SortDir == "asc" => q.OrderBy(b => b.SalePrice),
+                        _ when query.SortBy == "price" && query.SortDir == "desc" => q.OrderByDescending(b => b.SalePrice),
+                        _ => q.OrderByDescending(b => b.CreatedAt) // fallback
+                    };
+                };
+
+                var queryResult = await _usedBookRepository.GetAdminBookListAsync(predicate, orderBy, ct);
                 var dtoList = new List<AdminBookListItemDto>();
                 foreach (var res in queryResult)
                 {

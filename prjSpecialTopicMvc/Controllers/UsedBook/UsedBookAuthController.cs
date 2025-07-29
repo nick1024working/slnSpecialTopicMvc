@@ -47,9 +47,9 @@ namespace prjSpecialTopicMvc.Controllers.UsedBook
         [HttpPost("login-seller")]
         public async Task<IActionResult> LoginSeller()
         {
-            string userId = "8D56A9E9-B7B9-4B71-BDC0-CF22E47F5A63";
-            string userName = "Emily Lin";
-            string roleName = RoleNames.Seller;
+            string userId = "5414B103-CB9F-4101-8B69-00D82D940729";
+            string userName = "user439";
+            string roleName = RoleNames.Seller; 
 
             var claims = new List<Claim>
             {
