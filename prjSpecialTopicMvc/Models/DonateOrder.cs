@@ -11,13 +11,11 @@ public partial class DonateOrder
 
     public decimal TotalAmount { get; set; }
 
-    public string? PaymentMethod { get; set; }
+    public string PaymentMethod { get; set; } = null!;
 
     public DateTime? PaymentDate { get; set; }
 
-    public DateTime? CreatedAt { get; set; }
+    public DateTime OrderCreatedAt { get; set; }
 
     public virtual ICollection<DonateOrderItem> DonateOrderItems { get; set; } = new List<DonateOrderItem>();
-
-    public virtual User UidNavigation { get; set; } = null!;
 }
