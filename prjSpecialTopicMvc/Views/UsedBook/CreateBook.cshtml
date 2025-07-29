@@ -54,7 +54,7 @@
 	<h2 class="mb-3">建立二手書資料</h2>
 	<hr />
 
-	<form asp-action="CreateBook" id="create-form" class="needs-validation container" novalidate>
+	<form asp-action="CreateBook" id="create-form" class="needs-validation container" autocomplete="off" novalidate>
 		<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 		@* @Html.AntiForgeryToken() *@
 
@@ -94,7 +94,7 @@
 		<div class="row mb-4 g-3">
 			<div class="col-md-6">
 				<label asp-for="Request.ConditionRatingId" class="form-label"></label>
-				<select asp-for="Request.ConditionRatingId" asp-items="Model.BookConditionRatings" class="form-select">
+				<select asp-for="Request.ConditionRatingId" asp-items="Model.BookConditionRatings" class="form-select" id="condition-rating">>
 					<option value="" selected disabled> -- 請選擇書況評等 -- </option>
 				</select>
 				<span asp-validation-for="Request.ConditionRatingId" class="text-danger"></span>
@@ -330,8 +330,57 @@
 		countySelect.addEventListener("change", () => {
 			loadDistricts(countySelect.value);
 		});
+	</script>
+
+	<!-- 書況描述 核心js -->
+	<script>
+		// ========== 宣告函數 ==========
+		// 使用非同步方式，依照 countyId 載入 district select。
+		function getConditionRatingDescription(conditionRatingId) {
+
+			// 使用 AJAX 非同步取得清單 UI
+			return fetch(`/api/lookup/bookConditionRatingDescription?conditionRatingId=${conditionRatingId}`)
+				.then(async res => {
+					if (!res.ok) {
+						throw new Error(`HTTP ${res.status}：${res.statusText}`);
+					}
+
+					const contentType = res.headers.get("content-type") || "";
+					if (!contentType.includes("application/json")) {
+						throw new Error("伺服器回應格式錯誤，非 JSON");
+					}
+
+					const json = await res.json();
+					if (!json.isSuccess) {
+						throw new Error(json.errorMessage || "JSON載入失敗");
+					}
+
+					return json.value;
+				})
+				.catch(err => {
+					console.error("載入鄉鎮市失敗：", err);
+					districtSelect.disabled = true;
+					districtSelect.innerHTML = `<option value="" disabled>-- 載入失敗：${err.message} --</option>`;
+				});
+		}
 
 
+		// ==========  事件綁定 ==========
+		$('#condition-rating').on('change', async function () {
+			const selected = $(this).val();
+
+			// 預設文字（選擇中）
+			const tooltip = $('#condition-description .tooltip-content');
+			tooltip.text('載入中...');
+
+			try {
+				const desc = await getConditionRatingDescription(selected);
+				tooltip.text(desc || '查無對應說明');
+			} catch (err) {
+				tooltip.text('載入失敗');
+				console.error("取得書況說明失敗：", err);
+			}
+		});
 	</script>
 
 	<!-- 圖片上傳 + 送出表單 核心js -->

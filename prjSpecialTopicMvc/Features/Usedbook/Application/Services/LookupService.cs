@@ -186,5 +186,22 @@ namespace prjSpecialTopicMvc.Features.Usedbook.Application.Services
                 return ExceptionToErrorResultMapper<List<SelectListItem>>.Map(ex, _logger);
             }
         }
+
+        /// <summary>
+        /// 讀取 BookConditionRatingDescription 若無則回空
+        /// </summary>
+        public async Task<Result<string>> GetBookConditionRatingDescriptionAsync(int id, CancellationToken ct = default)
+        {
+            try
+            {
+                var data = await _bookConditionRatingRepository.GetDescriptionByIdAsync(id, ct);
+
+                return Result<string>.Success(data ?? "");
+            }
+            catch (Exception ex)
+            {
+                return ExceptionToErrorResultMapper<string>.Map(ex, _logger);
+            }
+        }
     }
 }

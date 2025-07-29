@@ -26,5 +26,16 @@ namespace prjSpecialTopicMvc.Controllers.UsedBook
 
             return Ok(queryResult);
         }
+
+        [HttpGet("bookConditionRatingDescription")]
+        public async Task<ActionResult<string>> BookConditionRatingDescription([FromQuery] int ConditionRatingId, CancellationToken ct)
+        {
+            var queryResult = await _lookupService.GetBookConditionRatingDescriptionAsync(ConditionRatingId, ct);
+
+            if (!queryResult.IsSuccess)
+                return BadRequest(queryResult.ErrorMessage);
+
+            return Ok(queryResult);
+        }
     }
 }

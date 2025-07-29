@@ -25,6 +25,15 @@ namespace prjSpecialTopicMvc.Features.Usedbook.Infrastructure.Repositories
                     Description = x.Description
                 })
                 .ToListAsync(ct);
-        } 
+        }
+
+        public async Task<string?> GetDescriptionByIdAsync(int id, CancellationToken ct = default)
+        {
+            return await _db.BookConditionRatings
+                .AsNoTracking()
+                .Where(x => x.Id == id)
+                .Select(x => x.Description)
+                .SingleOrDefaultAsync(ct);
+        }
     }
 }
