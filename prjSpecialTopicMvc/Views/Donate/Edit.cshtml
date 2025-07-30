@@ -1,0 +1,79 @@
+﻿@model prjSpecialTopicMvc.Models.DonateProject
+
+@{
+    ViewData["Title"] = "Edit";
+    var categoryList = ViewBag.CategoryList ?? new List<prjSpecialTopicMvc.Models.DonateCategory>();
+}
+
+<h2 class="text-center mb-4">✏️ 編輯募資專案</h2>
+
+<div class="container">
+    <form asp-action="Edit" enctype="multipart/form-data">
+        <input type="hidden" asp-for="DonateProjectId" />
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="form-group mb-3">
+            <label asp-for="DonateCategoriesId" class="form-label"></label>
+            <select asp-for="DonateCategoriesId" class="form-control"
+                    asp-items="@(new SelectList(categoryList, "DonateCategoriesId", "CategoriesName", Model.DonateCategoriesId))">
+                <option value="">--請選擇分類--</option>
+            </select>
+            <span asp-validation-for="DonateCategoriesId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="ProjectTitle" class="form-label"></label>
+            <input asp-for="ProjectTitle" class="form-control" />
+            <span asp-validation-for="ProjectTitle" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="ProjectDescription" class="form-label"></label>
+            <textarea asp-for="ProjectDescription" class="form-control" rows="5"></textarea>
+            <span asp-validation-for="ProjectDescription" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="TargetAmount" class="form-label"></label>
+            <input asp-for="TargetAmount" class="form-control" />
+            <span asp-validation-for="TargetAmount" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="StartDate" class="form-label"></label>
+            <input asp-for="StartDate" class="form-control" type="date" />
+            <span asp-validation-for="StartDate" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="EndDate" class="form-label"></label>
+            <input asp-for="EndDate" class="form-control" type="date" />
+            <span asp-validation-for="EndDate" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Status" class="form-label"></label>
+            <select asp-for="Status" class="form-control">
+                <option value="啟用" selected="@("啟用" == Model.Status)">啟用</option>
+                <option value="未啟用" selected="@("未啟用" == Model.Status)">未啟用</option>
+            </select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label">上傳新主圖片（可選）</label>
+            <input type="file" name="ProjectImage" class="form-control" />
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary px-4">儲存變更</button>
+            <a asp-action="List" class="btn btn-secondary ms-2">取消</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

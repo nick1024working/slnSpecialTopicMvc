@@ -1,0 +1,45 @@
+﻿@model IEnumerable<prjSpecialTopicMvc.Models.EBookCategory>
+
+@{
+    ViewData["Title"] = "分類管理";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">新增分類</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>分類名稱</th>
+            <th>上層分類</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.CategoryName)</td>
+                <td>@Html.DisplayFor(modelItem => item.ParentCategory.CategoryName)</td>
+                <td>
+                    @* --- ↓↓↓ 新增的按鈕 ↓↓↓ --- *@
+                    <a asp-action="BooksInCategory" asp-route-id="@item.CategoryId" class="btn btn-sm btn-info">該類別書</a>
+                    @* --- ↑↑↑ 新增的按鈕 ↑↑↑ --- *@
+                    <a asp-action="Edit" asp-route-id="@item.CategoryId" class="btn btn-sm btn-outline-primary">編輯</a>
+                    <a asp-action="Delete" asp-route-id="@item.CategoryId" class="btn btn-sm btn-outline-danger">刪除</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

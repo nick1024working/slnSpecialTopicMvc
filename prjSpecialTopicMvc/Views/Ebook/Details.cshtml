@@ -1,0 +1,336 @@
+﻿@model prjSpecialTopicMvc.Models.EBookMain
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>EBookMain</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EbookId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EbookId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EbookName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EbookName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EBookType)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EBookType)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Author)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Author)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Publisher)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Publisher)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Translator)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Translator)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Language)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Language)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Isbn)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Isbn)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Eisbn)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Eisbn)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PublishedCountry)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PublishedCountry)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EBookPosition)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EBookPosition)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EBookDataType)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EBookDataType)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FixedPrice)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FixedPrice)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ActualPrice)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ActualPrice)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Couponcode)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Couponcode)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Discount)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Discount)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PurchaseCountry)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PurchaseCountry)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cumulativesales)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cumulativesales)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BookDescription)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.BookDescription)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Weeksales)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Weeksales)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Monthsales)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Monthsales)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Totalsales)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Totalsales)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Weekviews)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Weekviews)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Monthviews)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Monthviews)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Totalviews)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Totalviews)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaturityRating)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaturityRating)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IsAvailable)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IsAvailable)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CategoryId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CategoryId)
+        </dd>
+        @* --- ↓↓↓ 新增的偵錯用欄位 ↓↓↓ --- *@
+        <dt class="col-sm-2">
+            類別名稱
+        </dt>
+        <dd class="col-sm-10">
+            @* 註解：顯示關聯的 Category 物件的 CategoryName 屬性。
+                使用 ?. (null 條件運算子) 來確保即使 Category 是 null 也不會出錯。 *@
+            @Model.Category?.CategoryName
+        </dd>
+        <dt class="col-sm-2">
+            父類別 ID
+        </dt>
+        <dd class="col-sm-10">
+            @* 註解：顯示 Category 物件的 ParentCategoryId 屬性 *@
+            @Model.Category?.ParentCategoryId
+        </dd>
+        <dt class="col-sm-2">
+            父類別名稱
+        </dt>
+        <dd class="col-sm-10">
+            @* 註解：顯示更深一層的 ParentCategory 物件的 CategoryName 屬性 *@
+            @Model.Category?.ParentCategory?.CategoryName
+        </dd>
+
+        @* --- ↓↓↓ 新增的區塊：顯示所有標籤 ↓↓↓ --- *@
+        <dt class="col-sm-2">
+            標籤
+        </dt>
+        <dd class="col-sm-10">
+            @* 註解：檢查 Labels 集合是否有資料 *@
+            @if (Model.Labels != null && Model.Labels.Any())
+            {
+                @* 註解：使用 foreach 迴圈，將每一個標籤以 Bootstrap badge 的樣式顯示出來 *@
+                @foreach (var label in Model.Labels)
+                {
+                    <span class="badge bg-secondary me-1">@label.LabelName</span>
+                }
+            }
+            else
+            {
+                @* 註解：如果沒有任何標籤，就顯示 "無" *@
+                <span>無</span>
+            }
+        </dd>
+        @* --- ↑↑↑ 新增的區塊：顯示所有標籤 ↑↑↑ --- *@
+
+        @* --- ↑↑↑ 新增的偵錯用欄位 ↑↑↑ --- *@
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SeriesId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SeriesId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PrimaryCoverPath)
+        </dt>
+        <dd class="col-sm-10">
+            <div class="col-md-4">
+                @if (!string.IsNullOrEmpty(Model.PrimaryCoverPath))
+                {
+                    @* 註解：用 <a> 標籤包住圖片，並加入 data-* 屬性來觸發 Modal *@
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" data-image-url="@Url.Content(Model.PrimaryCoverPath)">
+                        <img src="@Url.Content(Model.PrimaryCoverPath)" alt="主要封面" class="img-fluid rounded" />
+                    </a>
+                }
+                else
+                {
+                    <div class="border rounded bg-light d-flex align-items-center justify-content-center" style="height: 300px;">
+                        <span>無封面圖片</span>
+                    </div>
+                }
+            </div>
+        </dd>
+        @* --- ↓↓↓ 新增的區塊：顯示所有圖片 ↓↓↓ --- *@
+        <dt class="col-sm-2">
+            所有封面圖片
+        </dt>
+        <dd class="col-sm-10">
+            <div class="row">
+                @* 註解：檢查 EBookImages 集合是否有資料 *@
+                @if (Model.EBookImages != null && Model.EBookImages.Any())
+                {
+                    @* 註解：使用 foreach 迴圈，將每一張圖片顯示出來 *@
+                    @foreach (var image in Model.EBookImages)
+                    {
+                        <div class="col-md-3 text-center mb-3">
+                            @* 註解：用 <a> 標籤包住圖片，並加入 data-* 屬性來觸發 Modal *@
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" data-image-url="@Url.Content(image.ImagePath)">
+                                <img src="@Url.Content(image.ImagePath)" class="img-thumbnail" style="max-height: 150px;" />
+                            </a>
+                            @* 註解：如果這張是主封面，就顯示一個綠色標籤提示 *@
+                            @if (image.IsPrimary)
+                            {
+                                <div class="mt-1"><span class="badge bg-success">主封面</span></div>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12">
+                        <span>(無其他圖片)</span>
+                    </div>
+                }
+            </div>
+        </dd>
+        @* --- ↑↑↑ 新增的區塊：顯示所有圖片 ↑↑↑ --- *@
+    </dl>
+    @* --- ↓↓↓ 新增的 Modal (燈箱) HTML 結構 ↓↓↓ --- *@
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">圖片預覽</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    @* 這裡會用 JavaScript 動態放入被點擊的圖片 *@
+                    <img id="modalImage" src="" class="img-fluid" alt="放大圖片" />
+                </div>
+            </div>
+        </div>
+    </div>
+    @* --- ↑↑↑ 新增的 Modal (燈箱) HTML 結構 ↑↑↑ --- *@
+</div>
+<div>
+    @* --- ↓↓↓ 新增的部分 ↓↓↓ --- *@
+    @if (!string.IsNullOrEmpty(Model.EBookPosition))
+    {
+        <a href="@Url.Content(Model.EBookPosition)" target="_blank" class="btn btn-success">開啟電子書檔案</a>
+    }
+    @* --- ↑↑↑ 新增的部分 ↑↑↑ --- *@
+    @* --- 這就是修正後的部分 --- *@
+    <a asp-action="Edit" asp-route-id="@Model.EbookId" class="btn btn-primary">編輯</a>
+    <a asp-action="List" class="btn btn-secondary">返回列表</a>
+</div>
+
+@section Scripts {
+    <script>
+        // 註解：監聽 ID 為 imageModal 的燈箱的 'show.bs.modal' 事件 (在燈箱顯示前觸發)
+        document.getElementById('imageModal').addEventListener('show.bs.modal', function (event) {
+
+            // 註解：取得觸發這個事件的按鈕或連結 (也就是我們點擊的 <a> 標籤)
+            var triggerElement = event.relatedTarget;
+
+            // 註解：從觸發的連結上，讀取我們自訂的 data-image-url 屬性的值
+            var imageUrl = triggerElement.getAttribute('data-image-url');
+
+            // 註解：找到燈箱中準備用來顯示大圖的 <img> 標籤
+            var modalImage = document.getElementById('modalImage');
+
+            // 註解：將它的 src 屬性設定為我們剛剛讀取到的圖片路徑
+            modalImage.src = imageUrl;
+        });
+    </script>
+}

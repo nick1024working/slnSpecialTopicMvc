@@ -6,6 +6,10 @@ namespace prjSpecialTopicMvc.Models;
 
 public partial class TeamAProjectContext : DbContext
 {
+    public TeamAProjectContext()
+    {
+    }
+
     public TeamAProjectContext(DbContextOptions<TeamAProjectContext> options)
         : base(options)
     {
@@ -179,50 +183,45 @@ public partial class TeamAProjectContext : DbContext
 
         modelBuilder.Entity<DonateCategory>(entity =>
         {
-            entity.HasKey(e => e.DonateCategoriesId).HasName("PK__donateCa__78949A14CD18A7FB");
+            entity.HasKey(e => e.DonateCategoriesId).HasName("PK__donateCa__78949A147A649D41");
 
             entity.ToTable("donateCategories");
 
             entity.Property(e => e.DonateCategoriesId).HasColumnName("donateCategories_id");
-            entity.Property(e => e.Name)
+            entity.Property(e => e.CategoriesName)
                 .HasMaxLength(100)
-                .HasColumnName("name");
+                .HasColumnName("categoriesName");
         });
 
         modelBuilder.Entity<DonateImage>(entity =>
         {
-            entity.HasKey(e => e.ImageId).HasName("PK__donateIm__DC9AC955B4A6A048");
+            entity.HasKey(e => e.DonateImageId).HasName("PK__donateIm__696847680CF6D0E3");
 
             entity.ToTable("donateImages");
 
-            entity.Property(e => e.ImageId).HasColumnName("image_id");
-            entity.Property(e => e.DonateImageUrl)
-                .HasMaxLength(300)
-                .IsUnicode(false)
-                .HasColumnName("donateImage_url");
+            entity.Property(e => e.DonateImageId).HasColumnName("donateImage_id");
+            entity.Property(e => e.DonateImagePath)
+                .HasMaxLength(50)
+                .HasColumnName("donateImagePath");
             entity.Property(e => e.DonateProjectId).HasColumnName("donateProject_id");
-            entity.Property(e => e.IsMain)
-                .HasDefaultValue(false)
-                .HasColumnName("is_main");
-            entity.Property(e => e.SortOrder).HasColumnName("sort_order");
+            entity.Property(e => e.IsMain).HasColumnName("is_main");
 
             entity.HasOne(d => d.DonateProject).WithMany(p => p.DonateImages)
                 .HasForeignKey(d => d.DonateProjectId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_donateImages_Project");
+                .HasConstraintName("FK_donateImages_donateProjects");
         });
 
         modelBuilder.Entity<DonateOrder>(entity =>
         {
-            entity.HasKey(e => e.DonateOrderId).HasName("PK__donateOr__62F476963480A866");
+            entity.HasKey(e => e.DonateOrderId).HasName("PK__donateOr__62F476960AD39A4F");
 
             entity.ToTable("donateOrders");
 
             entity.Property(e => e.DonateOrderId).HasColumnName("donateOrder_id");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("(getdate())")
+            entity.Property(e => e.OrderCreatedAt)
                 .HasColumnType("datetime")
-                .HasColumnName("created_at");
+                .HasColumnName("orderCreated_at");
             entity.Property(e => e.PaymentDate)
                 .HasColumnType("datetime")
                 .HasColumnName("payment_date");
@@ -234,18 +233,13 @@ public partial class TeamAProjectContext : DbContext
                 .HasColumnType("decimal(18, 2)")
                 .HasColumnName("total_amount");
             entity.Property(e => e.Uid).HasColumnName("UID");
-
-            entity.HasOne(d => d.UidNavigation).WithMany(p => p.DonateOrders)
-                .HasForeignKey(d => d.Uid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_donateOrders_Users");
         });
 
         modelBuilder.Entity<DonateOrderItem>(entity =>
         {
-            entity.HasKey(e => e.OrderItemsId).HasName("PK__donateOr__86607EE1E22DB20C");
+            entity.HasKey(e => e.OrderItemsId).HasName("PK__donateOr__86607EE1AA9544A0");
 
-            entity.ToTable("donateOrderItems");
+            entity.ToTable("donateOrder_items");
 
             entity.Property(e => e.OrderItemsId).HasColumnName("orderItems_id");
             entity.Property(e => e.DonateOrderId).HasColumnName("donateOrder_id");
@@ -258,66 +252,77 @@ public partial class TeamAProjectContext : DbContext
             entity.HasOne(d => d.DonateOrder).WithMany(p => p.DonateOrderItems)
                 .HasForeignKey(d => d.DonateOrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_donateOrderItems_Order");
+                .HasConstraintName("FK_orderItems_donateOrder");
 
             entity.HasOne(d => d.DonatePlan).WithMany(p => p.DonateOrderItems)
                 .HasForeignKey(d => d.DonatePlanId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_donateOrderItems_Plan");
+                .HasConstraintName("FK_orderItems_donatePlan");
         });
 
         modelBuilder.Entity<DonatePlan>(entity =>
         {
-            entity.HasKey(e => e.DonatePlanId).HasName("PK__donatePl__9B6171FACE516AEA");
+            entity.HasKey(e => e.DonatePlanId).HasName("PK__donatePl__9B6171FAB6F36F2D");
 
             entity.ToTable("donatePlans");
 
             entity.Property(e => e.DonatePlanId).HasColumnName("donatePlan_id");
-            entity.Property(e => e.Description)
-                .HasColumnType("text")
-                .HasColumnName("description");
             entity.Property(e => e.DonateProjectId).HasColumnName("donateProject_id");
+            entity.Property(e => e.PlanDescription)
+                .HasColumnType("text")
+                .HasColumnName("planDescription");
+            entity.Property(e => e.PlanTitle)
+                .HasMaxLength(50)
+                .HasColumnName("planTitle");
             entity.Property(e => e.Price)
                 .HasColumnType("decimal(18, 2)")
                 .HasColumnName("price");
-            entity.Property(e => e.Title)
-                .HasMaxLength(200)
-                .HasColumnName("title");
 
             entity.HasOne(d => d.DonateProject).WithMany(p => p.DonatePlans)
                 .HasForeignKey(d => d.DonateProjectId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_donatePlans_Project");
+                .HasConstraintName("FK_donatePlans_donateProjects");
         });
 
         modelBuilder.Entity<DonateProject>(entity =>
         {
-            entity.HasKey(e => e.DonateProjectId).HasName("PK__donatePr__80A69FA5E5366B72");
+            entity.HasKey(e => e.DonateProjectId).HasName("PK__donatePr__80A69FA58E0A0CBE");
 
             entity.ToTable("donateProjects");
 
             entity.Property(e => e.DonateProjectId).HasColumnName("donateProject_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
             entity.Property(e => e.CurrentAmount)
-                .HasDefaultValue(0m)
                 .HasColumnType("decimal(18, 2)")
                 .HasColumnName("current_amount");
-            entity.Property(e => e.Description)
-                .HasColumnType("text")
-                .HasColumnName("description");
             entity.Property(e => e.DonateCategoriesId).HasColumnName("donateCategories_id");
             entity.Property(e => e.EndDate).HasColumnName("end_date");
+            entity.Property(e => e.IsDeleted).HasColumnName("is_deleted");
+            entity.Property(e => e.ProjectDescription)
+                .HasColumnType("text")
+                .HasColumnName("projectDescription");
+            entity.Property(e => e.ProjectTitle)
+                .HasMaxLength(200)
+                .HasColumnName("projectTitle");
             entity.Property(e => e.StartDate).HasColumnName("start_date");
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("status");
             entity.Property(e => e.TargetAmount)
                 .HasColumnType("decimal(18, 2)")
                 .HasColumnName("target_amount");
-            entity.Property(e => e.Title)
-                .HasMaxLength(200)
-                .HasColumnName("title");
+            entity.Property(e => e.Uid).HasColumnName("UID");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
 
             entity.HasOne(d => d.DonateCategories).WithMany(p => p.DonateProjects)
                 .HasForeignKey(d => d.DonateCategoriesId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_donateProjects_Categories");
+                .HasConstraintName("FK_donateProjects_donateCategories");
         });
 
         modelBuilder.Entity<EBookCategory>(entity =>
@@ -909,6 +914,25 @@ public partial class TeamAProjectContext : DbContext
                         j.HasKey("BookId", "TagId").HasName("PK__UsedBook__EBB70D9D2021EBB2");
                         j.ToTable("UsedBookSaleTags");
                     });
+        });
+
+        modelBuilder.Entity<UsedBookImage>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__UsedBook__3214EC0756533187");
+
+            entity.HasIndex(e => new { e.StorageProvider, e.ObjectKey }, "UQ__UsedBook__19B1FA10C8C16175").IsUnique();
+
+            entity.HasIndex(e => new { e.BookId, e.ImageIndex }, "UQ__UsedBook__D26AE13703BB75E8").IsUnique();
+
+            entity.Property(e => e.ObjectKey).HasMaxLength(300);
+            entity.Property(e => e.Sha256)
+                .HasMaxLength(32)
+                .IsFixedLength();
+            entity.Property(e => e.UploadedAt).HasDefaultValueSql("(sysutcdatetime())");
+
+            entity.HasOne(d => d.Book).WithMany(p => p.UsedBookImages)
+                .HasForeignKey(d => d.BookId)
+                .HasConstraintName("FK__UsedBookI__BookI__3BCADD1B");
         });
 
         modelBuilder.Entity<UsedBookImage>(entity =>
