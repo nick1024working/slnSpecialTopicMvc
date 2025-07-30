@@ -101,16 +101,17 @@
                         <div class="dropdown-menu rounded-0 m-0">
                             <a class="dropdown-item" asp-controller="UsedBook" asp-action="GetPublicBookList">公開商品列表</a>
                             <hr class="dropdown-divider">
+                            <a class="dropdown-item" asp-controller="UsedBookUser" asp-action="GetUserBookList">賣家書本列表</a>
+                            <hr class="dropdown-divider">
+                            <a class="dropdown-item" asp-controller="UsedBookAdmin" asp-action="GetAdminBookList">管理員書本列表</a>
+                            <a class="dropdown-item disabled" asp-controller="UsedBookSaleTag" asp-action="SaleTagList">主題分類管理</a>
+                            <a class="dropdown-item disabled" asp-controller="UsedBookSaleTag" asp-action="SaleTagList">促銷標籤管理</a>
+                            <hr class="dropdown-divider">
                             <a class="dropdown-item" asp-controller="UsedBookAuth" asp-action="Index">使用者驗證</a>
                             <a class="dropdown-item" asp-controller="UsedBookUser" asp-action="Me">當前使用者</a>
                             <form asp-controller="UsedBookAuth" asp-action="Logout" method="post">
                                 <button type="submit" class="dropdown-item border-0 bg-transparent">登出</button>
                             </form>
-                            <hr class="dropdown-divider">
-                            <a class="dropdown-item" asp-controller="UsedBookAdmin" asp-action="GetAdminBookList">管理員書本列表</a>
-                            <a class="dropdown-item" asp-controller="UsedBookSaleTag" asp-action="SaleTagList">促銷標籤管理</a>
-                            <hr class="dropdown-divider">
-                            <a class="dropdown-item" asp-controller="UsedBookUser" asp-action="GetUserBookList">賣家書本列表</a>
                         </div>
                     </div>
                     <!-- UsedBooks 結束-->

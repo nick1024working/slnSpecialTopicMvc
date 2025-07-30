@@ -4,9 +4,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using prjSpecialTopicMvc.Controllers.UsedBook.Common;
 using prjSpecialTopicMvc.Features.Usedbook.Application.Authentication;
-using prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Responses;
-using prjSpecialTopicMvc.Features.Usedbook.Application.Errors;
-using prjSpecialTopicMvc.Features.Usedbook.Enums;
 
 namespace prjSpecialTopicMvc.Controllers.UsedBook
 {
@@ -52,8 +49,8 @@ namespace prjSpecialTopicMvc.Controllers.UsedBook
         [HttpPost("login-seller")]
         public async Task<IActionResult> LoginSeller()
         {
-            string userId = "5414B103-CB9F-4101-8B69-00D82D940729";
-            string userName = "user439";
+            string userId = "8B6D8408-02E4-451A-A226-01550CC818E8";
+            string userName = "user773";
             string roleName = RoleNames.Seller; 
 
             var claims = new List<Claim>

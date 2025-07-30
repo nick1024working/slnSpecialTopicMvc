@@ -43,9 +43,9 @@
 				<li><a class="dropdown-item" href="#" data-bookstatus="unsold">未售出書本</a></li>
 			</ul>
 		</div>
-		<form class="d-flex btn-group">
-			<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-			<button type="submit" class="btn btn-light border-secondary text-nowrap">搜尋</button>
+		<form class="d-flex btn-group" autocomplete="off">
+			<input id="book-search-text"  class="form-control me-2" type="search" placeholder="關鍵字" aria-label="Search">
+			<button type="submit" id="book-search-btn" class="btn btn-light border-secondary text-nowrap">搜尋</button>
 		</form>
 	</div>
 </div>
@@ -71,6 +71,9 @@
 		// ========== 元素快取 ==========
 		const bookStatusItems = document.querySelectorAll('#book-status-dropdown .dropdown-item');
 		const bookStatusDropdownText = document.querySelector('#book-status-dropdown-text');
+
+		const bookSearchBtn = document.querySelector('#book-search-btn');
+		const bookSearchText = document.querySelector('#book-search-text');
 
 		// ========== 宣告函數 ==========
 
@@ -129,6 +132,29 @@
 				updateList(query.toString());
 			});
 		});
+
+		bookSearchText.addEventListener('focus', (e) => {
+			if (!e.target.value)
+				e.target.placeholder = "";
+		});
+
+				
+		bookSearchText.addEventListener('blur', (e) => {
+			if (!e.target.value)
+				e.target.placeholder = "關鍵字";
+		});
+
+		bookSearchBtn.addEventListener('click', function(e) {
+			e.preventDefault();
+
+			// 更新查詢參數
+			const query = new URLSearchParams(window.location.search);
+			console.log(bookSearchText);
+			query.set("keyword", bookSearchText.value);
+
+			updateList(query.toString());
+		});
+
 
 		// ========== 載入時立即執行 ==========
 		document.addEventListener('DOMContentLoaded', () => {
