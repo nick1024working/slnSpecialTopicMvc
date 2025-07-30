@@ -1,0 +1,63 @@
+@model prjSpecialTopicMvc.ViewModels.Forum.ForumPostViewModel
+
+@model prjSpecialTopicMvc.ViewModels.Forum.ForumPostViewModel
+
+@{
+    ViewData["Title"] = "新增文章";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<!-- 成功訊息 -->
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<!-- 錯誤提示 -->
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="ForumPost.Title"></label>
+        <input asp-for="ForumPost.Title" class="form-control" />
+        <span asp-validation-for="ForumPost.Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ForumPost.Content"></label>
+        <textarea asp-for="ForumPost.Content" class="form-control"></textarea>
+        <span asp-validation-for="ForumPost.Content" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SelectedCategoryId"></label>
+        <select asp-for="SelectedCategoryId" class="form-control" asp-items="Model.Categories">
+            <option value="">-- 請選擇分類 --</option>
+        </select>
+        <span asp-validation-for="SelectedCategoryId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SelectedFilterId"></label>
+        <select asp-for="SelectedFilterId" class="form-control" asp-items="Model.Filters">
+            <option value="">-- 請選擇標籤 --</option>
+        </select>
+        <span asp-validation-for="SelectedFilterId" class="text-danger"></span>
+    </div>
+
+
+    <input type="hidden" asp-for="ForumPost.CreatedAt" />
+    <input type="hidden" asp-for="ForumPost.ViewCount" />
+    <input type="hidden" asp-for="ForumPost.LikeCount" />
+    <input type="hidden" asp-for="ForumPost.CommentCount" />
+    <input type="hidden" asp-for="ForumPost.IsDeleted" />
+
+    <button type="submit" class="btn btn-primary mt-3">送出</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
