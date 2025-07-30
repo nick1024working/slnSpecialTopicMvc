@@ -1,5 +1,5 @@
 using prjSpecialTopicMvc.ViewModels.Forum;
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using prjSpecialTopicMvc.Models;
@@ -28,7 +28,7 @@ namespace prjSpecialTopicMvc.Controllers.Forum
             var teamAProjectContext = _context.ForumPosts
                 .Include(f => f.Filter)
                 .Include(f => f.PostCategory)
-                .Include(f => f.UidNavigation);
+                .Include(f => f.UidNavigation).Where(f => f.IsDeleted == false);
             return View(await teamAProjectContext.ToListAsync());
         }
 
@@ -40,7 +40,7 @@ namespace prjSpecialTopicMvc.Controllers.Forum
             var forumPost = await _context.ForumPosts
                 .Include(f => f.Filter)
                 .Include(f => f.PostCategory)
-                .Include(f => f.UidNavigation)
+                .Include(f => f.UidNavigation).Where(f => f.IsDeleted == false)
                 .FirstOrDefaultAsync(m => m.PostId == id);
             if (forumPost == null) return NotFound();
 
@@ -221,20 +221,19 @@ namespace prjSpecialTopicMvc.Controllers.Forum
 
             return View(viewModel);
         }
-
         // GET: ForumPosts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
 
-            var forumPost = await _context.ForumPosts
-                .Include(f => f.Filter)
+            var post = await _context.ForumPosts
                 .Include(f => f.PostCategory)
-                .Include(f => f.UidNavigation)
+                .Include(f => f.Filter)
                 .FirstOrDefaultAsync(m => m.PostId == id);
-            if (forumPost == null) return NotFound();
 
-            return View(forumPost);
+            if (post == null || post.IsDeleted) return NotFound();
+
+            return View(post);
         }
 
         // POST: ForumPosts/Delete/5
@@ -242,12 +241,12 @@ namespace prjSpecialTopicMvc.Controllers.Forum
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var forumPost = await _context.ForumPosts.FindAsync(id);
-            if (forumPost != null)
-            {
-                _context.ForumPosts.Remove(forumPost);
-                await _context.SaveChangesAsync();
-            }
+            var post = await _context.ForumPosts.FirstOrDefaultAsync(p => p.PostId == id);
+            if (post == null)
+                return NotFound();
+
+            post.IsDeleted = true; // 軟刪除
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
@@ -256,5 +255,6 @@ namespace prjSpecialTopicMvc.Controllers.Forum
         {
             return _context.ForumPosts.Any(e => e.PostId == id);
         }
+    
     }
 }

@@ -1,4 +1,3 @@
-
 @model IEnumerable<prjSpecialTopicMvc.Models.ForumPost>
 
 @{
@@ -28,7 +27,10 @@
                 </div>
                 <div class="card-footer text-end">
                     <a asp-action="Details" asp-route-id="@item.PostId" class="btn btn-sm btn-outline-primary me-2">查看</a>
-                    <a asp-action="Edit" asp-route-id="@item.PostId" class="btn btn-sm btn-outline-secondary">編輯</a>
+                    <a asp-action="Edit" asp-route-id="@item.PostId" class="btn btn-sm btn-outline-secondary me-2">編輯</a>
+                    <form asp-action="Delete" asp-route-id="@item.PostId" method="post" style="display:inline;" onsubmit="return confirm('確定要刪除這篇文章嗎？');">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">刪除</button>
+                    </form>
                 </div>
             </div>
         </div>
