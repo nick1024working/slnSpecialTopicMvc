@@ -1,0 +1,43 @@
+﻿@model IEnumerable<prjSpecialTopicMvc.Models.Label>
+@{
+    ViewData["Title"] = "標籤總管";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">新增標籤</a>
+</p>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>標籤名稱</th>
+            <th style="width: 150px;">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.LabelName)</td>
+                <td>
+                    @* --- ↓↓↓ 新增的按鈕 ↓↓↓ --- *@
+                    <a asp-action="BooksWithLabel" asp-route-id="@item.LabelId" class="btn btn-sm btn-info">該標籤書</a>
+                    @* --- ↑↑↑ 新增的按鈕 ↑↑↑ --- *@
+                    <a asp-action="Edit" asp-route-id="@item.LabelId" class="btn btn-sm btn-outline-primary">編輯</a>
+                    <a asp-action="Delete" asp-route-id="@item.LabelId" class="btn btn-sm btn-outline-danger">刪除</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

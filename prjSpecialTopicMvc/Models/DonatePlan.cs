@@ -9,11 +9,11 @@ public partial class DonatePlan
 
     public int DonateProjectId { get; set; }
 
-    public string Title { get; set; } = null!;
+    public string PlanTitle { get; set; } = null!;
 
     public decimal Price { get; set; }
 
-    public string? Description { get; set; }
+    public string? PlanDescription { get; set; }
 
     public virtual ICollection<DonateOrderItem> DonateOrderItems { get; set; } = new List<DonateOrderItem>();
 

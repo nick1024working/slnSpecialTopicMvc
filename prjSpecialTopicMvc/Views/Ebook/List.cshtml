@@ -1,0 +1,168 @@
+﻿@* 1. 更換 Model 為 EbookIndexViewModel *@
+@model prjSpecialTopicMvc.ViewModels.EBook.EbookIndexViewModel
+
+@* 在 List.cshtml 頁面頂部 <h1> 標籤的下方加入 *@
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+@{
+    ViewData["Title"] = "電子書管理列表";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">新增電子書</a>
+</p>
+
+@* 2. 新增搜尋與篩選功能的表單 *@
+@using (Html.BeginForm("List", "Ebook", FormMethod.Get, new { @class = "row g-3 mb-4" }))
+{
+    <div class="col-md-4">
+        @Html.TextBox("keyword", Model.Keyword, new { @class = "form-control", placeholder = "輸入書名或作者關鍵字" })
+    </div>
+    <div class="col-md-4">
+        @Html.DropDownList("availabilityFilter", new SelectList(Model.AvailabilityOptions, "Value", "Text", Model.AvailabilityFilter), new { @class = "form-select" })
+    </div>
+    <div class="col-md-4">
+        <input type="submit" value="查詢" class="btn btn-info" />
+        <a asp-action="List" class="btn btn-secondary">清除</a>
+    </div>
+}
+
+<div style="width: 100%;">
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+                <tr>
+                    @* 3. 保留您所有的欄位標頭 *@
+                    <th>
+                        @Html.DisplayNameFor(model => model.Ebooks.First().EbookId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Ebooks.First().EbookName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Ebooks.First().PrimaryCoverPath)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Ebooks.First().IsAvailable)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Ebooks.First().Author)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Ebooks.First().Publisher)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Ebooks.First().Eisbn)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Ebooks.First().FixedPrice)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Ebooks.First().ActualPrice)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Ebooks.First().BookDescription)
+                    </th>
+                    <th>
+                        操作
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @* 4. 迴圈現在是跑 Model.Ebooks *@
+                @foreach (var item in Model.Ebooks)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EbookId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EbookName)
+                        </td>
+                        <td>
+                            @* 5. 將圖片路徑轉換為實際圖片 *@
+                            @if (!string.IsNullOrEmpty(item.PrimaryCoverPath))
+                            {
+                                <img src="@Url.Content(item.PrimaryCoverPath)" alt="封面" style="max-width: 60px; height: auto;" />
+                            }
+                            else
+                            {
+                                <span>無圖片</span>
+                            }
+                        </td>
+                        <td>
+                            @* 6. 將布林值轉換為狀態標籤 *@
+                            @if (item.IsAvailable)
+                            {
+                                <span class="badge bg-success">上架中</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">已下架</span>
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Author)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Publisher)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Eisbn)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FixedPrice)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ActualPrice)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BookDescription)
+                        </td>
+                        <td>
+                            @* 7. 升級操作按鈕 *@
+                            <div class="btn-group" role="group" style="min-width: 280px;">
+                                @* --- ↓↓↓ 新增的部分 ↓↓↓ --- *@
+                                @if (!string.IsNullOrEmpty(item.EBookPosition))
+                                {
+                                    <a href="@Url.Content(item.EBookPosition)" target="_blank" class="btn btn-sm btn-outline-success">開啟檔案</a>
+                                }
+
+                                @* --- ↓↓↓ 新增的按鈕 ↓↓↓ --- *@
+                                <a asp-action="ManageTags" asp-route-id="@item.EbookId" class="btn btn-sm btn-outline-dark">標籤管理</a>
+                                @* --- ↑↑↑ 新增的按鈕 ↑↑↑ --- *@
+                                @* --- ↑↑↑ 新增的部分 ↑↑↑ --- *@
+                                <a asp-action="Edit" asp-route-id="@item.EbookId" class="btn btn-sm btn-outline-primary">編輯</a>
+                                <a asp-action="Details" asp-route-id="@item.EbookId" class="btn btn-sm btn-outline-info">詳細</a>
+
+                                <form asp-action="ToggleAvailability" asp-route-id="@item.EbookId" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    @if (item.IsAvailable)
+                                    {
+                                        <button type="submit" class="btn btn-sm btn-outline-warning">下架</button>
+                                    }
+                                    else
+                                    {
+                                        <button type="submit" class="btn btn-sm btn-outline-success">上架</button>
+                                    }
+                                </form>
+
+                                <a asp-action="Delete" asp-route-id="@item.EbookId" class="btn btn-sm btn-outline-danger">刪除</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

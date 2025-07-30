@@ -61,6 +61,8 @@ public partial class UsedBook
 
     public virtual District SellerDistrict { get; set; } = null!;
 
+    public virtual ICollection<UsedBookImage> UsedBookImages { get; set; } = new List<UsedBookImage>();
+
     public virtual ICollection<BookCategory> Categories { get; set; } = new List<BookCategory>();
 
     public virtual ICollection<BookConditionDetail> Conditions { get; set; } = new List<BookConditionDetail>();

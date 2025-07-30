@@ -1,0 +1,66 @@
+﻿@model prjSpecialTopicMvc.Models.EBookCategory
+
+@{
+    ViewData["Title"] = "編輯分類";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+@* <div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CategoryId" />
+            <div class="form-group mb-3">
+                <label asp-for="CategoryName" class="control-label">分類名稱</label>
+                <input asp-for="CategoryName" class="form-control" style="width: 100% !important; max-width: 100%; display: block !important;" />
+                <span asp-validation-for="CategoryName" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="ParentCategoryId" class="control-label">上層分類 (可選)</label>
+                <select asp-for="ParentCategoryId" class="form-select" asp-items="ViewBag.ParentCategoryId">
+                    <option value="">-- 無上層分類 --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="儲存" class="btn btn-primary" />
+                <a asp-action="List" class="btn btn-secondary">返回列表</a>
+            </div>
+        </form>
+    </div>
+</div> *@
+
+@* 註解：移除了外層的 col-md-4 和 row，改用一個固定寬度的 div 包住整個表單 *@
+<div style="width: 400px;">
+    <form asp-action="Edit">
+        @* (在 Create.cshtml 中這裡是 asp-action="Create") *@
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        @* 在 Edit.cshtml 中有這行 *@
+        <input type="hidden" asp-for="CategoryId" />
+
+        <div class="form-group mb-3">
+            <label asp-for="CategoryName" class="control-label">分類名稱</label>
+            @* 註解：移除複雜的行內 style，還原成單純的 form-control 即可 *@
+            <input asp-for="CategoryName" class="form-control" />
+            <span asp-validation-for="CategoryName" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="ParentCategoryId" class="control-label">上層分類 (可選)</label>
+            @* 註解：下拉選單的 class 是 form-select，它現在也能正常顯示了 *@
+            <select asp-for="ParentCategoryId" class="form-select" asp-items="ViewBag.ParentCategoryId">
+                <option value="">-- 無上層分類 --</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="儲存" class="btn btn-primary" /> @* (在 Create.cshtml 中 value 是 "建立") *@
+            <a asp-action="List" class="btn btn-secondary">返回列表</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

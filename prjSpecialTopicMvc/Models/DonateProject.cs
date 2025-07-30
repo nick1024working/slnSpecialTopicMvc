@@ -9,17 +9,27 @@ public partial class DonateProject
 
     public int DonateCategoriesId { get; set; }
 
-    public string Title { get; set; } = null!;
+    public Guid Uid { get; set; }
 
-    public string? Description { get; set; }
+    public string ProjectTitle { get; set; } = null!;
+
+    public string? ProjectDescription { get; set; }
 
     public decimal TargetAmount { get; set; }
 
-    public decimal? CurrentAmount { get; set; }
+    public decimal CurrentAmount { get; set; }
 
     public DateOnly StartDate { get; set; }
 
     public DateOnly EndDate { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime UpdatedAt { get; set; }
+
+    public string Status { get; set; } = null!;
+
+    public bool IsDeleted { get; set; }
 
     public virtual DonateCategory DonateCategories { get; set; } = null!;
 

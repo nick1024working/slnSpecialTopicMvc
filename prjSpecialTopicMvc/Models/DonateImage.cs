@@ -5,15 +5,13 @@ namespace prjSpecialTopicMvc.Models;
 
 public partial class DonateImage
 {
+    public int DonateImageId { get; set; }
+
     public int DonateProjectId { get; set; }
 
-    public int ImageId { get; set; }
-
-    public string? DonateImageUrl { get; set; }
+    public string DonateImagePath { get; set; } = null!;
 
     public bool? IsMain { get; set; }
-
-    public int? SortOrder { get; set; }
 
     public virtual DonateProject DonateProject { get; set; } = null!;
 }

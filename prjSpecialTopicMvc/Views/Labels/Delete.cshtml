@@ -1,0 +1,47 @@
+﻿@model prjSpecialTopicMvc.Models.Label
+@{
+    ViewData["Title"] = "刪除標籤";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h3 class="text-danger">您確定要刪除這個標籤嗎?</h3>
+<div>
+    <h4>@Model.LabelName</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">標籤名稱</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.LabelName)</dd>
+    </dl>
+
+    @* 註解：檢查 ViewBag 中是否有我們從 Controller 傳過來的 BlockingBooks *@
+    @if (ViewBag.BlockingBooks != null)
+    {
+        <div class="alert alert-warning mt-4">
+            <h5><i class="bi bi-exclamation-triangle-fill"></i> 無法刪除</h5>
+            <p>此標籤正在被以下書籍使用中，請先至這些書籍的「標籤管理」頁面移除此標籤後，才能刪除。</p>
+            <ul>
+                @foreach (var book in (List<prjSpecialTopicMvc.Models.EBookMain>)ViewBag.BlockingBooks)
+                {
+                    <li>
+                        <a asp-controller="Ebook" asp-action="ManageTags" asp-route-id="@book.EbookId" target="_blank">
+                            @book.EbookName
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="LabelId" />
+        @* 註解：如果 ViewBag.BlockingBooks 存在，就禁用刪除按鈕 *@
+        <input type="submit" value="確認刪除" class="btn btn-danger" disabled="@(ViewBag.BlockingBooks != null)" />
+        <a asp-action="Index" class="btn btn-secondary">返回列表</a>
+    </form>
+
+    @* <form asp-action="Delete"> *@
+    @*     <input type="hidden" asp-for="LabelId" /> *@
+    @*     <input type="submit" value="確認刪除" class="btn btn-danger" /> *@
+    @*     <a asp-action="Index" class="btn btn-secondary">返回列表</a> *@
+    @* </form> *@
+</div>
