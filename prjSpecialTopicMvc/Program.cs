@@ -22,7 +22,7 @@ builder.Services.AddDbContext<TeamAProjectContext>(options =>
 builder.Services.AddControllersWithViews();
 
 // ========== 各自需要的服務於以下註冊 ==========
-// 註冊驗證
+// UsedBooks - 註冊驗證
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
     {
@@ -30,8 +30,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/usedbooks/auth/denied";
         options.Cookie.Name = "usedbook_auth";
     });
-
-// 註冊授權
+// UsedBooks - 註冊授權
 builder.Services.AddAuthorization();
 // UsedBooks - 註冊 Unit Of Work
 builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
