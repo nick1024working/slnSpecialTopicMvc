@@ -1,0 +1,25 @@
+﻿@model prjSpecialTopicMvc.Models.DonateCategory
+
+<h2 class="text-center">➕ 新增分類</h2>
+
+<form asp-action="CategoriesCreate" class="w-50 mx-auto border p-4 rounded shadow bg-light">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group mb-3">
+        <label asp-for="CategoriesName" class="form-label"></label>
+        <input asp-for="CategoriesName" class="form-control" />
+        <span asp-validation-for="CategoriesName" class="text-danger"></span>
+    </div>
+
+    <div class="text-center">
+        <input type="submit" value="送出" class="btn btn-primary" />
+        <a asp-action="CategoriesList" class="btn btn-secondary ms-2">返回</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

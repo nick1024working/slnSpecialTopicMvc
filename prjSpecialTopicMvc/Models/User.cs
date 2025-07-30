@@ -35,8 +35,6 @@ public partial class User
 
     public byte? AuthorStatus { get; set; }
 
-    public virtual ICollection<DonateOrder> DonateOrders { get; set; } = new List<DonateOrder>();
-
     public virtual ICollection<EBookOrderMain> EBookOrderMains { get; set; } = new List<EBookOrderMain>();
 
     public virtual ICollection<EbookPurchased> EbookPurchaseds { get; set; } = new List<EbookPurchased>();

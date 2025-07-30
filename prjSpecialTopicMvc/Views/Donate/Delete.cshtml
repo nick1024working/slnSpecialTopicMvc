@@ -1,0 +1,35 @@
+﻿@model prjSpecialTopicMvc.Models.DonateProject
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1 class="text-danger text-center">確定刪除？</h1>
+
+<div class="container mt-4">
+    <div class="alert alert-warning">
+        <strong>警告：</strong>你即將刪除以下募資專案，此動作無法復原！
+    </div>
+
+    <dl class="row">
+        <dt class="col-sm-3">標題</dt>
+        <dd class="col-sm-9">@Model.ProjectTitle</dd>
+
+        <dt class="col-sm-3">分類</dt>
+        <dd class="col-sm-9">@Model.DonateCategories?.CategoriesName</dd>
+
+        <dt class="col-sm-3">目標金額</dt>
+        <dd class="col-sm-9">@Model.TargetAmount</dd>
+
+        <dt class="col-sm-3">目前金額</dt>
+        <dd class="col-sm-9">@Model.CurrentAmount</dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="DonateProjectId" />
+        <div class="text-center">
+            <button type="submit" class="btn btn-danger">刪除</button>
+            <a asp-action="List" class="btn btn-secondary">取消</a>
+        </div>
+    </form>
+</div>
+

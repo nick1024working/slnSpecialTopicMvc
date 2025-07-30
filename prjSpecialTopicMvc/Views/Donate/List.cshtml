@@ -1,0 +1,97 @@
+﻿@model IEnumerable<prjSpecialTopicMvc.Models.DonateProject>
+@{
+    ViewData["Title"] = "List";
+}
+
+@{
+    ViewData["Title"] = "募資專案列表";
+    var categoryList = ViewBag.CategoryList as List<SelectListItem> ?? new();
+    var selectedCategoryId = ViewBag.SelectedCategoryId as string ?? "";
+}
+
+<h1 class="text-center">📋 募資專案一覽表</h1>
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success text-center">@TempData["Success"]</div>
+}
+<div class="container mt-4">
+    <form method="get" class="row mb-4">
+        <div class="col-md-4">
+            <select name="categoryId" class="form-select">
+                <option value="">-- 全部分類 --</option>
+                @foreach (var item in categoryList)
+                {
+                    <option value="@item.Value" selected="@(item.Value == selectedCategoryId ? "selected" : null)">
+                        @item.Text
+                    </option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">搜尋</button>
+        </div>
+        <div class="col-md-6 text-end">
+            <a class="btn btn-success" asp-action="Create">➕ 新增專案</a>
+        </div>
+    </form>
+
+    <table class="table table-bordered table-hover shadow-sm text-center align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>序</th>
+                <th>圖片</th>
+                <th>分類名稱</th>
+                <th>@Html.DisplayNameFor(model => model.First().ProjectTitle)</th>
+                <th>@Html.DisplayNameFor(model => model.First().TargetAmount)</th>
+                <th>@Html.DisplayNameFor(model => model.First().CurrentAmount)</th>
+                <th>@Html.DisplayNameFor(model => model.First().StartDate)</th>
+                <th>@Html.DisplayNameFor(model => model.First().EndDate)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Status)</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = 0;
+                foreach (var item in Model)
+                {
+                    count++;
+                    <tr>
+                        <td>@count</td>
+                        <td>
+                            @{
+                                var mainImage = item.DonateImages.FirstOrDefault(i => i.IsMain == true);
+                                if (mainImage != null)
+                                {
+                                    <img src="~/img/@mainImage.DonateImagePath" alt="主圖" width="100" class="img-thumbnail" />
+                                }
+                                else
+                                {
+                                    <span class="text-muted">無圖片</span>
+                                }
+                            }
+                        </td>
+                        <td>@item.DonateCategories?.CategoriesName</td>
+                        <td>@item.ProjectTitle</td>
+                        <td>@item.TargetAmount</td>
+                        <td>@item.CurrentAmount</td>
+                        <td>@item.StartDate.ToString("yyyy-MM-dd")</td>
+                        <td>@item.EndDate.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <span class="badge bg-@(item.Status == "啟用" ? "success" : "danger")">
+                                @item.Status
+                            </span>
+                        </td>
+                        <td>
+                            <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.DonateProjectId">修改</a>
+                            <a class="btn btn-sm btn-danger"
+                               asp-action="Delete"
+                               asp-route-id="@item.DonateProjectId"
+                               onclick="return confirm('確定要刪除嗎？')">刪除</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
