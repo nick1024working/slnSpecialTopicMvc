@@ -1,5 +1,9 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Plugins;
+using prjSpecialTopicMvc.Features.Usedbook.Application.Services;
+using prjSpecialTopicMvc.Features.Usedbook.Infrastructure.DataAccess.UnitOfWork;
+using prjSpecialTopicMvc.Features.Usedbook.Infrastructure.Repositories;
+using prjSpecialTopicMvc.Features.Usedbook.Mapping;
 using prjSpecialTopicMvc.Models;
 using prjSpecialTopicMvc.Models.MEbook;
 
@@ -19,7 +23,41 @@ builder.Services.AddDbContext<TeamAProjectContext>(options =>
 builder.Services.AddControllersWithViews();
 
 // ========== 各自需要的服務於以下註冊 ==========
-
+// UsedBooks - 註冊驗證
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+    {
+        options.LoginPath = "/usedbooks/auth";
+        options.AccessDeniedPath = "/usedbooks/auth/denied";
+        options.Cookie.Name = "usedbook_auth";
+    });
+// UsedBooks - 註冊授權
+builder.Services.AddAuthorization();
+// UsedBooks - 註冊 Unit Of Work
+builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+// UsedBooks - 註冊 AutoMapper
+builder.Services.AddAutoMapper(cfg => { cfg.AddProfile<MappingProfile>(); });
+// UsedBooks - 註冊應用服務層（Services）
+// UsedBooks 服務 Lookup 用
+builder.Services.AddScoped<BookBindingRepository>();
+builder.Services.AddScoped<BookConditionRatingRepository>();
+builder.Services.AddScoped<ContentRatingRepository>();
+builder.Services.AddScoped<CountyRepository>();
+builder.Services.AddScoped<DistrictRepository>();
+builder.Services.AddScoped<LanguageRepository>();
+// UsedBooks 服務使用
+builder.Services.AddScoped<BookSaleTagRepository>();
+builder.Services.AddScoped<UsedBookRepository>();
+builder.Services.AddScoped<BookSaleTagRepository>();
+builder.Services.AddScoped<BookCategoryRepository>();
+builder.Services.AddScoped<UsedBookImageRepository>();
+// 註冊應用服務層（Services）
+builder.Services.AddScoped<ImageService>();
+builder.Services.AddScoped<LookupService>();
+builder.Services.AddScoped<UsedBookService>();
+builder.Services.AddScoped<BookCategoryService>();
+builder.Services.AddScoped<BookSaleTagService>();
+builder.Services.AddScoped<UsedBookImageService>();
 
 // 下方的 EbookService 是 IEbookService 的實作類別，請換成您實際的類別名稱
 builder.Services.AddScoped<IEbookService, EbookService>();

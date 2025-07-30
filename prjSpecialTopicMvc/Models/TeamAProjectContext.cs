@@ -95,10 +95,6 @@ public partial class TeamAProjectContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=TeamA_Project;Integrated Security=True;Trust Server Certificate=True");
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<BookBinding>(entity =>
@@ -937,6 +933,25 @@ public partial class TeamAProjectContext : DbContext
             entity.HasOne(d => d.Book).WithMany(p => p.UsedBookImages)
                 .HasForeignKey(d => d.BookId)
                 .HasConstraintName("FK__UsedBookI__BookI__3BCADD1B");
+        });
+
+        modelBuilder.Entity<UsedBookImage>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__UsedBook__3214EC075499035F");
+
+            entity.HasIndex(e => new { e.StorageProvider, e.ObjectKey }, "UQ__UsedBook__19B1FA1062B04E70").IsUnique();
+
+            entity.HasIndex(e => new { e.BookId, e.ImageIndex }, "UQ__UsedBook__D26AE137D347BF97").IsUnique();
+
+            entity.Property(e => e.ObjectKey).HasMaxLength(300);
+            entity.Property(e => e.Sha256)
+                .HasMaxLength(32)
+                .IsFixedLength();
+            entity.Property(e => e.UploadedAt).HasDefaultValueSql("(sysutcdatetime())");
+
+            entity.HasOne(d => d.Book).WithMany(p => p.UsedBookImages)
+                .HasForeignKey(d => d.BookId)
+                .HasConstraintName("FK__UsedBookI__BookI__4C0144E4");
         });
 
         modelBuilder.Entity<User>(entity =>

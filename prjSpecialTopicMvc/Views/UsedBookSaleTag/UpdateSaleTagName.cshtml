@@ -1,0 +1,34 @@
+﻿@using prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Requests
+@model UpdateBookSaleTagRequest
+
+@{
+    ViewData["Title"] = "UpdateSaleTagName";
+}
+
+<h1>UpdateSaleTagName</h1>
+
+<h4>UpdateBookSaleTagRequest</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="UpdateSaleTagName" asp-route-id="@ViewData["id"]" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="SaleTagName" class="control-label"></label>
+                <input asp-for="SaleTagName" class="form-control" />
+                <span asp-validation-for="SaleTagName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">返回列表</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

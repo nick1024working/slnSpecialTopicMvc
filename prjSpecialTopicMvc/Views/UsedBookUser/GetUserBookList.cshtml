@@ -1,0 +1,165 @@
+﻿@using prjSpecialTopicMvc.Features.Usedbook.Application.DTOs.Responses
+@model IEnumerable<UserBookListItemDto>
+
+@{
+	ViewData["Title"] = "賣家書本列表";
+}
+
+@section Styles {
+	<!-- Lightbox CSS -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet" />
+	<!-- Bootstrap Icons CDN -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+
+	<style>
+		.table td,
+		.table th {
+			padding: 0.75rem 1.25rem;
+		}
+	</style>
+}
+
+<div class="row my-4 px-3 align-items-end">
+	<div class="col-10">
+		<h2></h2>
+	</div>
+</div>
+
+<div class="bg-white border-light">
+	<div class="p-3 mb-0 border-bottom d-flex gap-2">
+		<h4 class="me-auto">我的書本列表</h4>
+		<button asp-controller="UsedBook" asp-action="CreateBook" class="btn btn-sm btn-light border-secondary d-flex align-items-center">大量匯入</button>
+		<a asp-controller="UsedBook" asp-action="CreateBook" class="btn btn-sm btn-light border-secondary d-flex align-items-center">新增書本</a>
+	</div>
+	<div class="p-3 mb-0 border-bottom d-flex gap-2">
+		<div class="btn-group">
+			<button id="book-status-dropdown-text" class="btn btn-sm btn-light border-secondary dropdown-toggle text-nowrap" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+				顯示：所有書本　
+			</button>
+			<ul id="book-status-dropdown" class="dropdown-menu">
+				<li><a class="dropdown-item" href="#" data-bookstatus="all">所有書本　</a></li>
+				<li><a class="dropdown-item" href="#" data-bookstatus="onshelf">上架中書本</a></li>
+				<li><a class="dropdown-item" href="#" data-bookstatus="unsold">未售出書本</a></li>
+			</ul>
+		</div>
+		<form class="d-flex btn-group" autocomplete="off">
+			<input id="book-search-text" class="form-control me-2" type="search" placeholder="關鍵字" aria-label="Search">
+			<button type="submit" id="book-search-btn" class="btn btn-light border-secondary text-nowrap">搜尋</button>
+		</form>
+	</div>
+</div>
+
+<div id="book-list-container">
+	@await Html.PartialAsync("_UserBookListTable", Model)
+</div>
+
+@section Scripts {
+	<!-- Lightbox JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+	<script>
+		lightbox.option({
+			'fadeDuration': 300,
+			'imageFadeDuration': 100,
+			'resizeDuration': 100
+		})
+	</script>
+
+	<!-- 更新列表 核心JS -->
+	<script>
+
+		// ========== 元素快取 ==========
+		const bookStatusItems = document.querySelectorAll('#book-status-dropdown .dropdown-item');
+		const bookStatusDropdownText = document.querySelector('#book-status-dropdown-text');
+
+		const bookSearchBtn = document.querySelector('#book-search-btn');
+		const bookSearchText = document.querySelector('#book-search-text');
+
+		// ========== 宣告函數 ==========
+
+		// 載入列表
+		function updateList(queryString) {
+			fetch(`/usedbooks/users/me/books/partial?${queryString}`)
+				.then(res => res.text())
+				.then(html => {
+					document.querySelector("#book-list-container").innerHTML = html;
+					history.pushState(null, '', `/usedbooks/users/me/books?${queryString}`);
+					bindSortEvents();	// 需重新綁定事件
+				})
+				.catch(err => {
+					console.error("載入失敗：", err);
+				});
+		}
+
+		// 封裝事件綁定
+		function bindSortEvents() {
+			const query = new URLSearchParams(window.location.search);
+
+			document.querySelectorAll('.sort-header').forEach(header => {
+				header.addEventListener('click', e => {
+					e.preventDefault();
+
+					const sortBy = header.dataset.sort;
+					const current = query.get("sortBy");
+					const currentDir = query.get("sortDir") || "desc";
+					const newDir = (sortBy === current && currentDir === "asc") ? "desc" : "asc";
+
+					query.set("sortBy", sortBy);
+					query.set("sortDir", newDir);
+					query.set("page", "1");
+
+					updateList(query.toString());
+				});
+			});
+		}
+
+		// ========== 事件監聽 ==========
+		bookStatusItems.forEach(item => {
+			item.addEventListener('click', function (e) {
+				e.preventDefault();
+
+				const selectedText = this.textContent;
+				const statusValue = this.dataset.bookstatus;
+
+				// 替換 dropdown 按鈕文字
+				bookStatusDropdownText.textContent = '顯示：' + selectedText;
+
+				// 更新查詢參數
+				const query = new URLSearchParams(window.location.search);
+				query.set("bookStatus", statusValue);
+				query.set("page", "1");
+
+				updateList(query.toString());
+			});
+		});
+
+				bookSearchText.addEventListener('focus', (e) => {
+			if (!e.target.value)
+				e.target.placeholder = "";
+		});
+
+
+		bookSearchText.addEventListener('blur', (e) => {
+			if (!e.target.value)
+				e.target.placeholder = "關鍵字";
+		});
+
+		bookSearchBtn.addEventListener('click', function(e) {
+			e.preventDefault();
+
+			// 更新查詢參數
+			const query = new URLSearchParams(window.location.search);
+			console.log(bookSearchText);
+			query.set("keyword", bookSearchText.value);
+
+			updateList(query.toString());
+		});
+
+		// ========== 載入時立即執行 ==========
+		document.addEventListener('DOMContentLoaded', () => {
+			const query = new URLSearchParams(window.location.search);
+			updateList(query.toString());
+		});
+
+	</script>
+}
