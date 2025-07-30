@@ -1,0 +1,40 @@
+﻿@model IEnumerable<prjSpecialTopicMvc.Models.DonateCategory>
+@{
+    ViewData["Title"] = "分類管理";
+}
+
+<h2 class="text-center">📂 募資分類一覽</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success text-center">@TempData["Success"]</div>
+}
+
+<div class="text-end mb-3">
+    <a asp-action="CategoriesCreate" class="btn btn-success">➕ 新增分類</a>
+</div>
+
+<table class="table table-bordered table-hover text-center">
+    <thead class="table-light">
+        <tr>
+            <th>分類名稱</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.CategoriesName</td>
+                    <td>
+                        <a class="btn btn-danger btn-sm"
+                           asp-action="CategoriesDelete"
+                           asp-route-id="@item.DonateCategoriesId"
+                           onclick="return confirm('確定要刪除這個分類嗎？')">刪除</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
