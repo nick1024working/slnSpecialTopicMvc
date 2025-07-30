@@ -1,0 +1,116 @@
+﻿@model IEnumerable<prjSpecialTopicMvc.Models.User>
+<style>
+	.member-table-full {
+		table-layout: auto; /* 欄寬依內容決定，非固定 */
+		width: auto; /* 表格整體寬度依內容撐開 */
+		white-space: nowrap; /* 不換行 */
+	}
+
+		.member-table-full th,
+		.member-table-full td {
+			overflow: visible; /* 不截斷文字 */
+			white-space: nowrap; /* 文字不換行 */
+			text-overflow: unset; /* 不出現省略號 */
+			vertical-align: middle;
+			max-width: none; /* 不限制欄位最大寬度 */
+		}
+
+	/* 不包裝 table 的外層 div 或移除任何 overflow-x: auto; */
+</style>
+
+@{
+	ViewData["Title"] = "會員清單";
+}
+
+<h1>會員清單</h1>
+<form asp-action="Index" method="get" style="float: right;">
+	<input type="text" name="searchString" value="@ViewBag.SearchString" placeholder="電話、姓名或Email" class="form-control mr-2" />
+	<button type="submit" class="btn btn-primary">搜尋</button>
+</form>
+<div style="clear: both;"></div>
+<p>
+	<a asp-action="Create">新增會員</a>
+</p>
+<table class="table member-table-full">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Phone)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Name)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Email)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Gender)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Birthday)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Address)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.RegisterDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.LastLoginDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Status)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Level)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Phone)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Email)
+				</td>
+				<td>
+					@(item.Gender ? "男" : "女")
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Birthday)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Address)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.RegisterDate)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.LastLoginDate)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Status)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Level)
+				</td>
+				<td>
+					<p>
+						<a asp-action="Edit" asp-route-id="@item.Uid">修改</a> |
+					</p>
+					<p>
+						<a asp-action="Details" asp-route-id="@item.Uid">詳細</a> |
+					</p>
+					<p><a asp-action="Delete" asp-route-id="@item.Uid">刪除</a></p>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
