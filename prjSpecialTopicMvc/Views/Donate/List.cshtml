@@ -7,14 +7,17 @@
     ViewData["Title"] = "募資專案列表";
     var categoryList = ViewBag.CategoryList as List<SelectListItem> ?? new();
     var selectedCategoryId = ViewBag.SelectedCategoryId as string ?? "";
+    var selectedStatus = ViewBag.SelectedStatus as string ?? "";
 }
 
-<h1 class="text-center">📋 募資專案一覽表</h1>
+<h1 class="text-center mb-4">📋 募資專案一覽表</h1>
+
 @if (TempData["Success"] != null)
 {
     <div class="alert alert-success text-center">@TempData["Success"]</div>
 }
-<div class="container mt-4">
+
+<div class="container">
     <form method="get" class="row mb-4">
         <div class="col-md-4">
             <select name="categoryId" class="form-select">
@@ -27,11 +30,18 @@
                 }
             </select>
         </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-primary">搜尋</button>
+        <div class="col-md-4">
+            <select name="status" class="form-select">
+                <option value="">-- 全部狀態 --</option>
+                <option value="募資中" selected="@(selectedStatus == "募資中" ? "selected" : null)">募資中</option>
+                <option value="已結束" selected="@(selectedStatus == "已結束" ? "selected" : null)">已結束</option>
+            </select>
         </div>
-        <div class="col-md-6 text-end">
-            <a class="btn btn-success" asp-action="Create">➕ 新增專案</a>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">搜尋</button>
+        </div>
+        <div class="col-md-2 text-end">
+            <a class="btn btn-success w-100" asp-action="Create">➕ 新增專案</a>
         </div>
     </form>
 
@@ -46,7 +56,7 @@
                 <th>@Html.DisplayNameFor(model => model.First().CurrentAmount)</th>
                 <th>@Html.DisplayNameFor(model => model.First().StartDate)</th>
                 <th>@Html.DisplayNameFor(model => model.First().EndDate)</th>
-                <th>@Html.DisplayNameFor(model => model.First().Status)</th>
+                <th>狀態</th>
                 <th>操作</th>
             </tr>
         </thead>
@@ -56,20 +66,12 @@
                 foreach (var item in Model)
                 {
                     count++;
+                    var imagePath = item.DonateImages?.FirstOrDefault(i => i.IsMain == true)?.DonateImagePath;
+                    string imgSrc = imagePath != null ? Url.Content($"~/img/{imagePath}") : Url.Content("~/img/default.png");
                     <tr>
                         <td>@count</td>
                         <td>
-                            @{
-                                var mainImage = item.DonateImages.FirstOrDefault(i => i.IsMain == true);
-                                if (mainImage != null)
-                                {
-                                    <img src="~/img/@mainImage.DonateImagePath" alt="主圖" width="100" class="img-thumbnail" />
-                                }
-                                else
-                                {
-                                    <span class="text-muted">無圖片</span>
-                                }
-                            }
+                            <img src="@imgSrc" alt="主圖" width="80" height="100" class="rounded shadow-sm" />
                         </td>
                         <td>@item.DonateCategories?.CategoriesName</td>
                         <td>@item.ProjectTitle</td>
@@ -78,16 +80,33 @@
                         <td>@item.StartDate.ToString("yyyy-MM-dd")</td>
                         <td>@item.EndDate.ToString("yyyy-MM-dd")</td>
                         <td>
-                            <span class="badge bg-@(item.Status == "啟用" ? "success" : "danger")">
+                            <span class="badge bg-@(item.Status == "募資中" ? "success" : "danger")">
                                 @item.Status
                             </span>
                         </td>
                         <td>
                             <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.DonateProjectId">修改</a>
+
                             <a class="btn btn-sm btn-danger"
                                asp-action="Delete"
                                asp-route-id="@item.DonateProjectId"
                                onclick="return confirm('確定要刪除嗎？')">刪除</a>
+                            @if (item.Status == "募資中")
+                            {
+                                <form asp-action="ToggleStatus" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@item.DonateProjectId" />
+                                    <input type="hidden" name="newStatus" value="已結束" />
+                                    <button type="submit" class="btn btn-sm btn-secondary">結束</button>
+                                </form>
+                            }
+                            else if (item.Status == "已結束")
+                            {
+                                <form asp-action="ToggleStatus" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@item.DonateProjectId" />
+                                    <input type="hidden" name="newStatus" value="募資中" />
+                                    <button type="submit" class="btn btn-sm btn-success">募資</button>
+                                </form>
+                            }
                         </td>
                     </tr>
                 }

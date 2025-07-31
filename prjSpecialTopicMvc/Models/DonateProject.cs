@@ -35,7 +35,8 @@ public partial class DonateProject
 
     public DateTime UpdatedAt { get; set; }
     [Display(Name = "狀態")]
-    public string Status { get; set; } = null!;
+    [ScaffoldColumn(false)]
+    public string Status { get; set; } = "募資中";
 
     public bool IsDeleted { get; set; }
 
