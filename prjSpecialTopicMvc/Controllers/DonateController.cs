@@ -27,18 +27,11 @@ namespace prjSpecialTopicMvc.Controllers
                 })
                 .ToList();
         }
-        public async Task<IActionResult> List(int? categoryId)
-        {
-            // 1. 下拉式選單用分類資料
-            ViewBag.CategoryList = _context.DonateCategories
-                .Select(c => new SelectListItem
-                {
-                    Value = c.DonateCategoriesId.ToString(),
-                    Text = c.CategoriesName
-                })
-                .ToList();
 
-            // 2. 查詢專案資料並包含圖片與分類
+        public async Task<IActionResult> List(int? categoryId, string status)
+        {
+            LoadCategoryList();
+
             var query = _context.DonateProjects
                 .Include(p => p.DonateCategories)
                 .Include(p => p.DonateImages)
@@ -49,8 +42,29 @@ namespace prjSpecialTopicMvc.Controllers
                 query = query.Where(p => p.DonateCategoriesId == categoryId);
             }
 
+            if (!string.IsNullOrEmpty(status))
+            {
+                query = query.Where(p => p.Status == status);
+            }
+
             ViewBag.SelectedCategoryId = categoryId?.ToString() ?? "";
+            ViewBag.SelectedStatus = status ?? "";
+
             return View(await query.ToListAsync());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ToggleStatus(int id, string newStatus)
+        {
+            var project = await _context.DonateProjects.FindAsync(id);
+            if (project != null)
+            {
+                project.Status = newStatus;
+                _context.Update(project);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = $"已將專案「{project.ProjectTitle}」狀態更改為「{newStatus}」";
+            }
+            return RedirectToAction(nameof(List));
         }
 
         // GET: Donate/Create
@@ -73,6 +87,7 @@ namespace prjSpecialTopicMvc.Controllers
                 project.CurrentAmount = 0;
                 //project.Uid = Guid.Parse(User.FindFirst("UserID").Value); 如有會員ID可使用
                 project.Uid = Guid.NewGuid();
+                project.Status = "募資中";
 
                 _context.Add(project);
                 await _context.SaveChangesAsync();

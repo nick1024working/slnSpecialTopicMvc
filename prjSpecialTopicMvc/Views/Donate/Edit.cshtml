@@ -54,8 +54,8 @@
         <div class="form-group mb-3">
             <label asp-for="Status" class="form-label"></label>
             <select asp-for="Status" class="form-control">
-                <option value="啟用" selected="@("啟用" == Model.Status)">啟用</option>
-                <option value="未啟用" selected="@("未啟用" == Model.Status)">未啟用</option>
+                <option value="募資中" selected="@("募資中" == Model.Status)">募資中</option>
+                <option value="已結束" selected="@("已結束" == Model.Status)">已結束</option>
             </select>
             <span asp-validation-for="Status" class="text-danger"></span>
         </div>
