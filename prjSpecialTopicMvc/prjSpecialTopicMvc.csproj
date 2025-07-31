@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\EBook\EBook\" />
+    <Folder Include="wwwroot\EBook\Images\" />
   </ItemGroup>
 
 </Project>
