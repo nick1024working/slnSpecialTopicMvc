@@ -207,7 +207,7 @@ namespace prjSpecialTopicMvc.Features.Usedbook.Infrastructure.Repositories
             // 1. 建立查詢（包含條件與關聯載入）
             var query = _db.UsedBooks
                 .AsNoTracking()
-                .Where(b => b.SellerId == userId)
+                .Where(b => b.SellerId == userId && b.IsActive)
                 .Where(predicate)
                 .Include(b => b.UsedBookImages)
                 .Include(b => b.ContentRating);
